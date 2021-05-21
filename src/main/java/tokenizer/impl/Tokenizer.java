@@ -32,10 +32,6 @@ public class Tokenizer implements ITokenizer {
             (instance = Tokenizer.builder().delimiters(' ').skipSymbols("'").build())
                 : instance;
     }
-    public static ITokenizer initJSONTokenizer(){
-        return Tokenizer.builder().delimiters('[', ']', '{', '}', ':', ',').skipSymbols("\"").
-                        tokenizeDelimiter().keepSkipSymbol().keepEscapeSymbol().build();
-    }
 
     private static final char escape = '\\';
     private IWhitespace whitespace;

@@ -4,7 +4,6 @@ import err.ERR_TYPE;
 import err.iface.IErr;
 import err.ut.StackTraceUtil;
 import runstate.Glob;
-import readnode.iface.IReadNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +41,6 @@ public class ErrDev implements IErr {
         if(errType.isErr() && displayErrors){
             String found = (foundItems.length == 0)? null : Arrays.toString(foundItems);
             populateErr(
-                    null,
                     errType.message(),
                     null,
                     found
@@ -55,26 +53,14 @@ public class ErrDev implements IErr {
 
     @Override
     public void kill(ERR_TYPE errType) {
-        this.kill(errType, Glob.RUN_STATE.getCurrNode());
+        this.kill(errType);
     }
 
-    @Override
-    public void kill(ERR_TYPE errType, IReadNode statusNode) {
-        if(displayErrors){
-            populateErr(
-                    statusNode,
-                    errType.message(),
-                    null, null
-            );
-            dispAndQuit();
-        }
-    }
 
     @Override
     public void kill(ERR_TYPE errType, String text) {
         if(displayErrors){
             populateErr(
-                    null,
                     errType.message(),
                     text, null
             );
@@ -90,26 +76,14 @@ public class ErrDev implements IErr {
     @Override
     public void kill(String message, String text){
         if(displayErrors){
-            populateErr(Glob.RUN_STATE.getCurrNode(), message, text, null);
+            populateErr(message, text, null);
             dispAndQuit();
         }
     }
 
-    @Override
-    public void kill(IReadNode statusNode, String message){
-        if(Glob.DISPLAY_DEV_ERRORS){
-            populateErr(statusNode, message, null, null);
-            dispAndQuit();
-        }
-    }
 
-    protected final void populateErr(IReadNode readNode, String message, String text, String found){
+    protected final void populateErr(String message, String text, String found){
         errInfo = new String[5];
-        if(readNode != null){
-            errInfo[0] = (readNode.friendlyStatusString());
-            errInfo[2] = ("in '" + readNode.containerText() + "'");
-            errInfo[3] = ("at '" + readNode.text() + "'");
-        }
         if(message != null){
             errInfo[1] = (message);
         }

@@ -1,11 +1,7 @@
 package runstate.impl;
 
-import datasource.iface.IDataSource;
-import langdefalgo.impl.AlgoImplGroupStep1;
-import readnode.iface.IReadNode;
 import runstate.iface.IRunState;
 import runstate.iface.IRunStep;
-import stack.iface.IStructStack;
 
 public class RunState implements IRunState {
     private static RunState instance;
@@ -37,30 +33,7 @@ public class RunState implements IRunState {
     }
 
     @Override
-    public void initTest(IDataSource dataSource) {
-        new AlgoImplGroupStep1().initAlgos();
-        currentSourceStep = new RunStep1(dataSource);
-    }
-
-    @Override
     public void initStep1() {
-        //new AlgoImplGroupStep1().initAlgos();
-
-//        currentSourceStep = new RunStep1(
-//            new SourceActiveOnly(
-//                        new SourceTextEvent(
-//                                new SourceTok(
-//                                    new SourceNonEmpty(
-//                                        new SourceFile(filePath)
-//                                    )
-//                                )
-//                        )
-//            )
-//        );
-    }
-
-    @Override
-    public void initStep2() {
 
     }
 
@@ -70,20 +43,4 @@ public class RunState implements IRunState {
     public void go() {
         currentSourceStep.go();
     }
-
-    @Override
-    public void setCurrNode(IReadNode currNode) {
-        currentSourceStep.setCurrNode(currNode);
-    }
-
-    @Override
-    public IReadNode getCurrNode() {
-        return currentSourceStep == null? null : currentSourceStep.getCurrNode();
-    }
-
-    @Override
-    public IStructStack getStack() {
-        return currentSourceStep.getStack();
-    }
-
 }
