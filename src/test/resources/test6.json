@@ -1,0 +1,93 @@
+{
+  "children": [
+    {
+      "children": [{
+        "children": [{
+          "children": [
+            {
+              "children": [],
+              "attributes": {
+                "OVERRIDE": [],
+                "VISIBILITY": ["PUBLIC"],
+                "FINAL": ["FALSE"],
+                "CODE_NODE_TYPE": ["METHOD"],
+                "ABSTRACT": ["FALSE"],
+                "DATA_TYPE": ["VOID"],
+                "STATIC": ["FALSE"],
+                "NAME": ["method1"]
+              }
+            },
+            {
+              "children": [],
+              "attributes": {
+                "NAME": ["METHOD_BODY"],
+                "CODE_NODE_TYPE": ["METHOD_BODY"]
+              }
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "attributes": {
+                    "COLLECTION": ["SCALAR"],
+                    "CODE_NODE_TYPE": ["METHOD_ARG"],
+                    "DATA_TYPE": ["INT"],
+                    "VAR_VALUE": ["47"],
+                    "NAME": ["arg1"]
+                  }
+                },
+                {
+                  "children": [],
+                  "attributes": {
+                    "COLLECTION": ["SCALAR"],
+                    "CODE_NODE_TYPE": ["METHOD_ARG"],
+                    "DATA_TYPE": ["STRING"],
+                    "VAR_VALUE": ["Happy Boy"],
+                    "NAME": ["arg2"]
+                  }
+                }
+              ],
+              "attributes": {
+                "QUANTIFIER": ["ZERO"],
+                "NAME": ["METHOD_ARGS"],
+                "CODE_NODE_TYPE": ["METHOD_ARGS"]
+              }
+            }
+          ],
+          "attributes": {
+            "EXTENDS": [],
+            "VISIBILITY": ["PUBLIC"],
+            "IMPLEMENTS": [],
+            "FINAL": ["FALSE"],
+            "CODE_NODE_TYPE": ["CLASS"],
+            "ABSTRACT": ["FALSE"],
+            "STATIC": ["FALSE"],
+            "NAME": ["class1"]
+          }
+        }],
+        "attributes": {
+          "PATH": ["glob.package1.file1"],
+          "CODE_NODE_TYPE": ["FILE"],
+          "NAME": ["file1"]
+        }
+      }],
+      "attributes": {
+        "CODE_NODE_TYPE": ["PACKAGE"],
+        "NAME": ["package1"]
+      }
+    },
+    {
+      "children": [],
+      "attributes": {
+        "CODE_NODE_TYPE": ["PACKAGE"],
+        "NAME": ["package2"]
+      }
+    }
+  ],
+  "attributes": {
+    "FORMAT_INDENT": ["4"],
+    "CODE_NODE_TYPE": ["GLOB"],
+    "OUT_LANG": ["JAVA"],
+    "NAME": ["GLOB"]
+  }
+}

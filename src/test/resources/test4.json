@@ -1,0 +1,199 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "attribModifier": {
+                "attributes": {
+                  "EXTENDS": [],
+                  "VISIBILITY": [
+                    "PUBLIC"
+                  ],
+                  "FINAL": [
+                    "FALSE"
+                  ],
+                  "IMPLEMENTS": [],
+                  "ABSTRACT": [
+                    "FALSE"
+                  ],
+                  "STATIC": [
+                    "FALSE"
+                  ],
+                  "NAME": [
+                    "class1"
+                  ]
+                }
+              },
+              "codeNodeType": "CLASS"
+            }
+          ],
+          "attribModifier": {
+            "attributes": {
+              "PATH": [
+                "glob.package1.file1"
+              ],
+              "NAME": [
+                "file1"
+              ]
+            }
+          },
+          "codeNodeType": "FILE"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "attribModifier": {
+                "attributes": {
+                  "EXTENDS": [],
+                  "VISIBILITY": [
+                    "PUBLIC"
+                  ],
+                  "FINAL": [
+                    "FALSE"
+                  ],
+                  "IMPLEMENTS": [],
+                  "ABSTRACT": [
+                    "FALSE"
+                  ],
+                  "STATIC": [
+                    "FALSE"
+                  ],
+                  "NAME": [
+                    "class2"
+                  ]
+                }
+              },
+              "codeNodeType": "CLASS"
+            }
+          ],
+          "attribModifier": {
+            "attributes": {
+              "PATH": [
+                "glob.package1.file2"
+              ],
+              "NAME": [
+                "file2"
+              ]
+            }
+          },
+          "codeNodeType": "FILE"
+        }
+      ],
+      "attribModifier": {
+        "attributes": {
+          "NAME": [
+            "package1"
+          ]
+        }
+      },
+      "codeNodeType": "PACKAGE"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "attribModifier": {
+                "attributes": {
+                  "EXTENDS": [],
+                  "VISIBILITY": [
+                    "PUBLIC"
+                  ],
+                  "FINAL": [
+                    "FALSE"
+                  ],
+                  "IMPLEMENTS": [],
+                  "ABSTRACT": [
+                    "FALSE"
+                  ],
+                  "STATIC": [
+                    "FALSE"
+                  ],
+                  "NAME": [
+                    "class3"
+                  ]
+                }
+              },
+              "codeNodeType": "CLASS"
+            }
+          ],
+          "attribModifier": {
+            "attributes": {
+              "PATH": [
+                "glob.package2.file3"
+              ],
+              "NAME": [
+                "file3"
+              ]
+            }
+          },
+          "codeNodeType": "FILE"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "attribModifier": {
+                "attributes": {
+                  "EXTENDS": [],
+                  "VISIBILITY": [
+                    "PUBLIC"
+                  ],
+                  "FINAL": [
+                    "FALSE"
+                  ],
+                  "IMPLEMENTS": [],
+                  "ABSTRACT": [
+                    "FALSE"
+                  ],
+                  "STATIC": [
+                    "FALSE"
+                  ],
+                  "NAME": [
+                    "class4"
+                  ]
+                }
+              },
+              "codeNodeType": "CLASS"
+            }
+          ],
+          "attribModifier": {
+            "attributes": {
+              "PATH": [
+                "glob.package2.file4"
+              ],
+              "NAME": [
+                "file4"
+              ]
+            }
+          },
+          "codeNodeType": "FILE"
+        }
+      ],
+      "attribModifier": {
+        "attributes": {
+          "NAME": [
+            "package2"
+          ]
+        }
+      },
+      "codeNodeType": "PACKAGE"
+    }
+  ],
+  "attribModifier": {
+    "attributes": {
+      "OUT_LANG": [
+        "JAVA"
+      ],
+      "FORMAT_INDENT": [
+        "4"
+      ]
+    }
+  },
+  "codeNodeType": "GLOB"
+}

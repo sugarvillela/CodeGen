@@ -1,0 +1,63 @@
+{
+  "attrib": {
+    "attribScope": "global",
+    "outLang": "java"
+  },
+  "format": {
+    "indent": 4
+  },
+  "packages": [
+    {
+      "packageName": "group1",
+      "files": [
+        {
+          "file": "g1f1",
+          "imports": [
+            "g2f1"
+          ],
+          "class": {
+            "attrib": {
+              "attribScope": "class",
+              "name": "class1",
+              "visibility": "public",
+              "abstract": false,
+              "final": false,
+              "extends": "class0",
+              "implements": [
+                "ifaceA",
+                "ifaceB"
+              ]
+            },
+            "fields": [
+              {
+                "var": {
+                  "attrib": {
+                    "attribScope": "var",
+                    "name": "field1",
+                    "visibility": "public",
+                    "final": false,
+                    "type": "int",
+                    "initValue": "47"
+                  }
+                }
+              }
+            ],
+            "classCode": [
+              {
+                "method": {
+                  "attrib": {
+                    "scope": "method",
+                    "name": "method1",
+                    "visibility": "public",
+                    "abstract": false,
+                    "final": false
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
