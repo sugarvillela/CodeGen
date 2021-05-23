@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import runstate.Glob;
 import codedef.iface.IAttribModifier;
 import codedef.modifier.*;
-import utiljson.TupPair;
+import tuple.TupPair;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -12,6 +12,9 @@ import runstate.impl.RunState;
 import codedef.impl.PrototypeFactory;
 import utiljson.UtilJson;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Glob {
     // Error settings
     public static final boolean             DISPLAY_DEV_ERRORS =    true;   // disable for release?
@@ -31,4 +34,10 @@ public class Glob {
     public static final UtilEnum            UTIL_ENUM =             UtilEnum.initInstance();
     public static final UtilJson            UTIL_JSON =             UtilJson.initInstance();
     public static final PrototypeFactory    PROTOTYPE_FACTORY =     PrototypeFactory.initInstance();
+    public static final String              TIME_INIT =             (new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")).format(new Date());
+    //laptop
+    public static final String GEN_PATH = "C:\\Users\\daves\\OneDrive\\Documents\\GitHub\\SemanticAnalyzer\\src\\main\\java\\generated";
+    //desktop
+    //public static final String GEN_PATH = "C:\\Users\\Dave Swanson\\OneDrive\\Documents\\GitHub\\SemanticAnalyzer\\src\\main\\java\\generated";
+
 }

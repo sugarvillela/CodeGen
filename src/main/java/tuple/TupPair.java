@@ -1,4 +1,4 @@
-package utiljson;
+package tuple;
 
 public class TupPair<A,B> {
     private final A a;
@@ -13,5 +13,10 @@ public class TupPair<A,B> {
     }
     public B getB(){
         return b;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + "a=" + a + ", b=" + b + ']';
     }
 }
