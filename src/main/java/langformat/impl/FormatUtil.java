@@ -1,6 +1,7 @@
 package langformat.impl;
 
 import langformat.iface.IFormatUtil;
+import langformat.iface.ILineUtil;
 import langgen.interfaces.IWidget;
 import tokenizer.iface.ISplitUtil;
 import tokenizer.impl.SplitUtil;
@@ -11,6 +12,7 @@ import java.util.List;
 public class FormatUtil implements IFormatUtil {
     private final List<String> content;
     private final ISplitUtil splitUtil;
+    private final ILineUtil lineUtil;
     protected int indent, tab, margin;
 
     public FormatUtil() {
@@ -23,6 +25,7 @@ public class FormatUtil implements IFormatUtil {
         this.tab = tab;
         indent = 0;
         splitUtil = new SplitUtil("\"").setStartPos(margin);
+        lineUtil = new LineUtil(this);
     }
 
     @Override
@@ -42,18 +45,38 @@ public class FormatUtil implements IFormatUtil {
     }
 
     @Override
-    public final void add(String text){
-        this.content.add( text );
+    public final void addLine(String text, boolean wrap){
+        if(wrap){
+            this.addLine(text);
+        }
+        else if(text != null){
+            this.content.add(text);
+        }
     }
 
     @Override
     public final void addLine(String text){
-        while(text != null){
+        if(text != null){
             text = tab(text);
             String[] pair = splitUtil.split(text);
             this.content.add(pair[0]);
             text = pair[1];
         }
+        if(text != null){
+            this.inc();
+            do{
+                text = tab(text);
+                String[] pair = splitUtil.split(text);
+                this.content.add(pair[0]);
+                text = pair[1];
+            }while(text != null);
+            this.dec();
+        }
+    }
+
+    @Override
+    public ILineUtil lineUtil() {
+        return lineUtil;
     }
 
     @Override

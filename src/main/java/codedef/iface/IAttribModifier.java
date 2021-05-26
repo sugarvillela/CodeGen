@@ -2,6 +2,7 @@ package codedef.iface;
 
 import iface_global.ICsv;
 import codedef.modifier.MODIFIER;
+import iface_global.ISerializableJson;
 import tuple.TupPair;
 
 import java.util.HashMap;

@@ -193,12 +193,6 @@ class SteadyPathTreeTest {
             class1.getAttribModifier().put(NAME, "method1");
             pathTree.put(class1, "method1");
         }
-        pathTree.pathBack();
-        {
-            ICodeNode class1 = p.getPrototype(METHOD_BODY);
-            pathTree.put(class1, "METHOD_BODY");
-        }
-        pathTree.pathBack();
         {
             ICodeNode class1 = p.getPrototype(METHOD_ARGS);
             pathTree.put(class1, "METHOD_ARGS");

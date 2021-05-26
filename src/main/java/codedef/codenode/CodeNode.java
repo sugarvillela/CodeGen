@@ -6,12 +6,12 @@ import codedef.iface.ICodeNode;
 import codedef.modifier.*;
 import err.ERR_TYPE;
 import generictree.iface.IGTreeNode;
+import langformat.iface.INullableUtil;
+import langformat.impl.NullableUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
-
-import java.util.ArrayList;
-import java.util.List;
+import translators.iface.ITranslator;
 
 public class CodeNode implements ICodeNode {
     protected final CODE_NODE codeNodeEnum;
@@ -19,12 +19,16 @@ public class CodeNode implements ICodeNode {
     protected final IAttribStruct attribStruct;
     protected final CodeNodeContentToJson contentToJson;
     protected IGTreeNode<ICodeNode> parentTreeNode;
+    protected final ITranslator translator;
+    protected final INullableUtil lineUtil;
 
     public CodeNode(CODE_NODE codeNodeEnum, IAttribModifier attribModifier, IAttribStruct attribStruct) {
         this.codeNodeEnum = codeNodeEnum;
         this.attribModifier = attribModifier;
         this.attribStruct = attribStruct;
+        this.translator = Glob.OUT_LANG_MANAGER.getTranslatorFactory().get(codeNodeEnum);
         this.contentToJson = new CodeNodeContentToJson();
+        lineUtil = NullableUtil.initInstance();
     }
 
     @Override
@@ -40,11 +44,6 @@ public class CodeNode implements ICodeNode {
     @Override
     public IAttribStruct getAttribStruct() {
         return attribStruct;
-    }
-
-    @Override
-    public void visitParent(ICodeNode child) {
-
     }
 
     @Override
@@ -66,9 +65,12 @@ public class CodeNode implements ICodeNode {
     }
 
     @Override
-    public void fromJson(JSONObject jsonObject) {
-
+    public ITranslator translator() {
+        return this.translator;
     }
+
+    @Override
+    public void fromJson(JSONObject jsonObject) {}
 
     @Override
     public JSONObject toJson() {

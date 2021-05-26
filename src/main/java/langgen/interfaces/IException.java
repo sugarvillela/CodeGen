@@ -1,6 +1,6 @@
 package langgen.interfaces;
 
-public interface IException  extends IWidget{
+public interface IException  extends IWidget {
     IException add(IWidget... widget);
     IException add(String... text);
 

@@ -1,6 +1,6 @@
 package langgen.interfaces;
 
-public interface IClass extends IWidget{
+public interface IClass extends IWidget {
     IClass add(IWidget... widget);
     IClass add(String... text);
 
@@ -18,8 +18,8 @@ public interface IClass extends IWidget{
     }
 
     interface IImport extends IWidget{
-//        IImport add(IWidget... widget);
-//        IImport add(String... text);
+//        IImport addLine(IWidget... widget);
+//        IImport addLine(String... text);
     }
     interface IImportBuilder{
         IImportBuilder setPathPackages(String... pathPackages);

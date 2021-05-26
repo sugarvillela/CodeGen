@@ -2,6 +2,7 @@ package runstate;
 
 import tokenizer.iface.ITokenizer;
 import tokenizer.impl.Tokenizer;
+import translators.impl.OutLangManager;
 import util_enu.UtilEnum;
 import utilfile.FileNameUtil;
 import utilfile.SmallFileDump;
@@ -33,6 +34,7 @@ public class Glob {
 
     public static final UtilEnum            UTIL_ENUM =             UtilEnum.initInstance();
     public static final UtilJson            UTIL_JSON =             UtilJson.initInstance();
+    public static final OutLangManager      OUT_LANG_MANAGER =      OutLangManager.initInstance();
     public static final PrototypeFactory    PROTOTYPE_FACTORY =     PrototypeFactory.initInstance();
     public static final String              TIME_INIT =             (new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")).format(new Date());
     //laptop

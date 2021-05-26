@@ -19,6 +19,7 @@ public enum ERR_TYPE {
     // Attrib or structure
     MISSING_REQUIRED    ("A required field is missing"),
     DISALLOWED_NESTING  ("Disallowed nesting"),
+    LANGUAGE_ERR        ("Disallowed in target language"),
 
     // Text Event errors
     BAD_JSON("JSON object improperly formed"),

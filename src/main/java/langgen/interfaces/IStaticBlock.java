@@ -1,6 +1,6 @@
 package langgen.interfaces;
 
-public interface IStaticBlock extends IWidget{
+public interface IStaticBlock extends IWidget {
     IStaticBlock add(IWidget... widget);
     IStaticBlock add(String... text);
 

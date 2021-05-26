@@ -2,7 +2,7 @@ package langgen.interfaces;
 
 import langformat.impl.FormatUtil;
 
-public interface ICondition extends IWidget{
+public interface ICondition extends IWidget {
     public enum CONNECTOR implements ICondition{
         AND_    ("&&"),
         OR_     ("||"),

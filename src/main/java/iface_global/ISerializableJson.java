@@ -1,4 +1,4 @@
-package codedef.iface;
+package iface_global;
 
 import org.json.JSONObject;
 

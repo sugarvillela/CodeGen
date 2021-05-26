@@ -3,28 +3,8 @@
     {
       "children": [{
         "children": [{
-          "children": [
-            {
-              "children": [],
-              "attributes": {
-                "OVERRIDE": [],
-                "VISIBILITY": ["PUBLIC"],
-                "FINAL": ["FALSE"],
-                "CODE_NODE_TYPE": ["METHOD"],
-                "ABSTRACT": ["FALSE"],
-                "DATA_TYPE": ["VOID"],
-                "STATIC": ["FALSE"],
-                "NAME": ["method1"]
-              }
-            },
-            {
-              "children": [],
-              "attributes": {
-                "NAME": ["METHOD_BODY"],
-                "CODE_NODE_TYPE": ["METHOD_BODY"]
-              }
-            },
-            {
+          "children": [{
+            "children": [{
               "children": [
                 {
                   "children": [],
@@ -49,16 +29,26 @@
               ],
               "attributes": {
                 "QUANTIFIER": ["ZERO"],
-                "NAME": ["METHOD_ARGS"],
-                "CODE_NODE_TYPE": ["METHOD_ARGS"]
+                "CODE_NODE_TYPE": ["METHOD_ARGS"],
+                "NAME": ["METHOD_ARGS"]
               }
+            }],
+            "attributes": {
+              "OVERRIDE": [],
+              "VISIBILITY": ["PUBLIC"],
+              "FINAL": ["FALSE"],
+              "CODE_NODE_TYPE": ["METHOD"],
+              "DATA_TYPE": ["VOID"],
+              "ABSTRACT": ["FALSE"],
+              "STATIC": ["FALSE"],
+              "NAME": ["method1"]
             }
-          ],
+          }],
           "attributes": {
             "EXTENDS": [],
             "VISIBILITY": ["PUBLIC"],
-            "IMPLEMENTS": [],
             "FINAL": ["FALSE"],
+            "IMPLEMENTS": [],
             "CODE_NODE_TYPE": ["CLASS"],
             "ABSTRACT": ["FALSE"],
             "STATIC": ["FALSE"],

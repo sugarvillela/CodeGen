@@ -20,13 +20,16 @@ public interface IFormatUtil {
     /**Decrease indent by 1 tab */
     void dec();
 
-    /** To add content as-is, no formatting or line splitting
-     * @param text exact text, no indent */
-    void add(String text);
+    /**@param text any length
+     * @param wrap false if you don't want text to wrap */
+    void addLine(String text, boolean wrap);
 
-    /**The primary way to add content; takes care of formatting and line splitting
+    /**The primary way to addLine content; takes care of formatting and line splitting.
+     * If text wraps, additional lines are indented.
      * @param text any length */
     void addLine(String text);
+
+    ILineUtil lineUtil();
 
     /**Add multiple lines directly from IWidget object
      * @param widgets nested objects containing widgets or text */

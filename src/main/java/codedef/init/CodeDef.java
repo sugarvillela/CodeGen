@@ -22,9 +22,10 @@ import static codedef.modifier.MODIFIER.*;
 public class CodeDef {
     private static final int EXPECTED_SIZE = 13;
     private final HashMap<CODE_NODE, ICodeNode> prototypes;
-
+    
     public CodeDef() {
         prototypes = new HashMap<>((int)Math.ceil(EXPECTED_SIZE * 1.34));
+        
         this.initGlob();
         this.initPackage();
         this.initFile();
