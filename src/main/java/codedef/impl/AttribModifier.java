@@ -28,6 +28,12 @@ public class AttribModifier  implements IAttribModifier {
         this.attributes = new HashMap<>();
         this.contentToJson = new ModifierContentToJson();
         this.contentFromJson = new ModifierContentFromJson();
+        this.setModifier(CODE_NODE_TYPE, codeNodeEnum.toString());
+
+        this.required.add(CODE_NODE_TYPE);
+        this.required.add(NAME);
+
+        this.allowed.add(IS_HEADER);
     }
     public AttribModifier(
             CODE_NODE codeNodeEnum,
@@ -45,12 +51,11 @@ public class AttribModifier  implements IAttribModifier {
 
     @Override
     public void initRequired(MODIFIER... requiredModifiers) {
-        this.required = new ArrayList<>(Arrays.asList(requiredModifiers));
+        this.required.addAll(Arrays.asList(requiredModifiers));
     }
 
     @Override
     public void initAllowed(MODIFIER... allowedModifiers) {
-        this.allowed = (required == null)? new ArrayList<>() : new ArrayList<>(required);
         this.allowed.addAll(Arrays.asList(allowedModifiers));
     }
 
@@ -71,23 +76,21 @@ public class AttribModifier  implements IAttribModifier {
 
     @Override
     public boolean isRequired(MODIFIER modifier) {
-        return required != null && required.contains(modifier);
+        return required.contains(modifier);
     }
 
     @Override
     public void assertHaveRequiredModifiers() {
-        if(required != null){
-            for(MODIFIER modifier : required){
-                if(!attributes.containsKey(modifier)){
-                    Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, modifier.toString());
-                }
+        for(MODIFIER modifier : required){
+            if(!attributes.containsKey(modifier)){
+                Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, modifier.toString());
             }
         }
     }
 
     @Override
     public void assertIsAllowed(MODIFIER modifier) {
-        if(allowed == null || !allowed.contains(modifier)){
+        if(!allowed.contains(modifier) && !required.contains(modifier)){
             Glob.ERR.kill(ERR_TYPE.UNKNOWN_ID, modifier.toString());
         }
     }
@@ -238,10 +241,6 @@ public class AttribModifier  implements IAttribModifier {
 
     private static class ModifierContentToJson {
         public JSONObject getJsonObj(IAttribModifier attribModifier){
-            //JSONObject out = new JSONObject();
-            //out.put("required", new JSONArray(attribModifier.getRequired()));
-            //out.put("allowed", new JSONArray(attribModifier.getAllowed()));
-            //out.put("attributes", new JSONObject(attribModifier.getAttributes()));
             return new JSONObject(attribModifier.getAttributes());
         }
     }

@@ -24,9 +24,9 @@ public interface IGTreeNode <T> extends ICsv {
     ArrayList<IGTreeNode <T>> getChildren();
     ArrayList<T> getPayloadChildren();
 
-    void addChild(IGTreeNode <T> child);
+    IGTreeNode <T> addChild(IGTreeNode <T> child);
 
-    void addChild(String identifier, T payload);// addLine child of same subtype
+    IGTreeNode <T> addChild(String identifier, T payload);// addLine child of same subtype
 
     void setOp(char op);
     char op();

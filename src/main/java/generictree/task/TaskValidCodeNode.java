@@ -11,7 +11,7 @@ public class TaskValidCodeNode implements IGTreeTask<ICodeNode> {
     public boolean doTask(IGTreeNode<ICodeNode> treeNode) {
         ICodeNode codeNode = treeNode.getPayload();
         IAttribModifier attribModifier = codeNode.getAttribModifier();
-        IAttribStruct attribStruct = codeNode.getAttribStruct();
+        IAttribStruct attribStruct = codeNode.getStructBody();
 
         attribModifier.assertHaveRequiredModifiers();
         attribStruct.assertHaveRequiredChildren(treeNode.getPayloadChildren());

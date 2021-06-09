@@ -21,6 +21,9 @@ public abstract class GTreeNodeBase<T> implements IGTreeNode<T> {
         children = new ArrayList<>();
     }
 
+    // implementations return node of same type
+    protected abstract IGTreeNode <T> newImplTypeNode();
+
     @Override
     public String identifier() {
         return identifier;
@@ -89,6 +92,22 @@ public abstract class GTreeNodeBase<T> implements IGTreeNode<T> {
             payloadChildren.add(child.getPayload());
         }
         return payloadChildren;
+    }
+
+    @Override
+    public IGTreeNode <T> addChild(IGTreeNode<T> child) {
+        child.setParent(this);
+        child.setLevel(level + 1);
+        children.add(child);
+        return child;
+    }
+
+    @Override
+    public IGTreeNode<T> addChild(String identifier, T payload) {
+        IGTreeNode<T> child = this.newImplTypeNode();
+        child.setIdentifier(identifier);
+        child.setPayload(payload);
+        return this.addChild(child);
     }
 
     @Override

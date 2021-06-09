@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JsonObjFile {
+public class UtilFileJson {
     private int indent;
 
-    public JsonObjFile(){
+    public UtilFileJson(){
         indent = 2;
     }
     public void setIndent(int indent){

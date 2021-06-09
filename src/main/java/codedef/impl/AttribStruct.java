@@ -1,6 +1,5 @@
 package codedef.impl;
 
-import codedef.iface.IAttribModifier;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,12 +31,11 @@ public class AttribStruct implements IAttribStruct {
 
     @Override
     public void initRequired(CODE_NODE... requiredChildren) {
-        this.required = new ArrayList<>(Arrays.asList(requiredChildren));
+        this.required.addAll(Arrays.asList(requiredChildren));
     }
 
     @Override
     public void initAllowed(CODE_NODE... allowedChildren) {
-        this.allowed = (required == null)? new ArrayList<>() : new ArrayList<>(required);
         this.allowed.addAll(Arrays.asList(allowedChildren));
     }
 
@@ -61,7 +59,7 @@ public class AttribStruct implements IAttribStruct {
         if(required != null){
             Stream<ICodeNode> stream = children.stream();
             for(CODE_NODE requiredEnum : required){
-                if(!stream.anyMatch(child -> child.codeNodeEnum() == requiredEnum)){
+                if(stream.noneMatch(child -> child.codeNodeEnum() == requiredEnum)){
                     Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, requiredEnum.toString());
                 }
             }
@@ -69,10 +67,8 @@ public class AttribStruct implements IAttribStruct {
     }
 
     @Override
-    public void assertIsAllowedChild(CODE_NODE newChildEnum) {
-        if(allowed == null || !allowed.contains(newChildEnum)){
-            Glob.ERR.kill(ERR_TYPE.DISALLOWED_NESTING, newChildEnum.toString());
-        }
+    public boolean isAllowedChild(CODE_NODE childEnum) {
+        return(allowed.contains(childEnum) || required.contains(childEnum));
     }
 
     @Override

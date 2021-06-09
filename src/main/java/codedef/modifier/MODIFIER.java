@@ -10,21 +10,26 @@ public enum MODIFIER implements IModifierEnum {
     ATTRIB_SCOPE    (STRING,    ONE,        null),
     OUT_LANG        (STRING,    ONE,        ENU_OUT_LANG.class),
     FORMAT_INDENT   (INT,       ONE,        null),
-    IMPORTS         (STRING,    MANY,       null),
     NAME            (STRING,    ONE,        null),
+    LIT_VAL         (STRING,    ONE,        null),
     VISIBILITY      (STRING,    ONE,        ENU_VISIBILITY.class),
     ABSTRACT        (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
     FINAL           (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
     STATIC          (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
     EXTENDS         (STRING,    ANY,        null),
     IMPLEMENTS      (STRING,    ANY,        null),
-    OVERRIDE        (NULL,      ZERO,       null),
+    OVERRIDE        (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
     DATA_TYPE       (STRING,    ONE,        ENU_DATA_TYPE.class),
     VAR_VALUE       (UNK,       ONE,        null),
     PATH            (STRING,    ONE,        null),
     QUANTIFIER      (STRING,    ONE,        ENU_QUANTIFIER.class),
     COLLECTION      (STRING,    ONE,        ENU_COLLECTION.class),
-    CODE_NODE_TYPE  (STRING,    ONE,        CODE_NODE.class)
+    CONJUNCTION_TYPE(STRING,    ONE,        ENU_CONJUNCTION.class),
+    COMPARISON_TYPE (STRING,    ONE,        ENU_COMPARISON.class),
+    NEGATE          (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
+    CODE_NODE_TYPE  (STRING,    ONE,        CODE_NODE.class),
+    IS_HEADER       (BOOLEAN,   ONE,        ENU_BOOLEAN.class),
+
     ;
 
     private final ENU_DATA_TYPE initArgType;

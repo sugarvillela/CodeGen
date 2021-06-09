@@ -1,7 +1,7 @@
 package codedef.impl;
 
-import codedef.codenode.CodeNode;
 import codedef.iface.ICodeNode;
+import mock.MockSource;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,31 +13,11 @@ import codedef.modifier.ENU_DATA_TYPE;
 import codedef.modifier.MODIFIER;
 
 import static codedef.modifier.CODE_NODE.*;
-import static codedef.modifier.ENU_VISIBILITY.PUBLIC;
 import static codedef.modifier.MODIFIER.*;
 
 class CodeAttribTest {
-    private IAttribModifier mockAttribModifier(){
-        IAttribModifier attribModifier = new AttribModifier(CLASS);
-        attribModifier.initRequired(NAME);
-        attribModifier.initAllowed(VISIBILITY, ABSTRACT, STATIC, FINAL, IMPLEMENTS, EXTENDS);
-        attribModifier.put(VISIBILITY, PUBLIC.toString());
-        attribModifier.put(ABSTRACT, "FALSE");
-        attribModifier.put(STATIC, "FALSE");
-        attribModifier.put(FINAL, "FALSE");
-        attribModifier.put(IMPLEMENTS);
-        attribModifier.put(EXTENDS);
-        return attribModifier;
-    }
-    private IAttribStruct mockAttribStruct(){
-        IAttribStruct attribStruct = new AttribStruct(CLASS);
-        attribStruct.initRequired(IMPORT);
-        attribStruct.initAllowed(CLASS_FIELD, METHOD);
-        return attribStruct;
-    }
-    private ICodeNode mockCodeNode(){
-        return new CodeNode(CLASS, mockAttribModifier(), mockAttribStruct());
-    }
+    MockSource mockSource = new MockSource();
+
     @Test
     void setSimpleAttribModifier() {
         IAttribModifier attrib = new AttribModifier(FILE);
@@ -63,7 +43,7 @@ class CodeAttribTest {
     @Test
     void setVarious() {
         String actual, expected;
-        IAttribModifier attrib = new AttribModifier(VAR);
+        IAttribModifier attrib = new AttribModifier(VAR_DEF);
         attrib.initRequired(NAME, DATA_TYPE, QUANTIFIER);
         attrib.initAllowed(STATIC, FINAL, VAR_VALUE);
         attrib.put(STATIC, "FALSE");
@@ -92,7 +72,7 @@ class CodeAttribTest {
     @Test
     void givenPopulatedAttribModifier_getJson() {
         String expected = "{\"allowed\":[\"NAME\",\"VISIBILITY\",\"ABSTRACT\",\"STATIC\",\"FINAL\",\"IMPLEMENTS\",\"EXTENDS\"],\"attributes\":{\"EXTENDS\":[],\"VISIBILITY\":[\"PUBLIC\"],\"IMPLEMENTS\":[],\"FINAL\":[\"FALSE\"],\"ABSTRACT\":[\"FALSE\"],\"STATIC\":[\"FALSE\"]},\"required\":[\"NAME\"]}";
-        IAttribModifier attrib = mockAttribModifier();
+        IAttribModifier attrib = mockSource.mockAttribModifier();
         System.out.println(attrib.csvString());
         JSONObject jsonObj = attrib.toJson();
         String actual = jsonObj.toString();
@@ -102,7 +82,7 @@ class CodeAttribTest {
     @Test
     void givenPopulatedAttribStruct_getJson() {
         String expected = "{\"allowed\":[\"IMPORT\",\"CLASS_FIELD\",\"METHOD\"],\"required\":[\"IMPORT\"]}";
-        IAttribStruct attrib = mockAttribStruct();
+        IAttribStruct attrib = mockSource.mockAttribStruct();
         System.out.println(attrib.csvString());
         JSONObject jsonObj = attrib.toJson();
         String actual = jsonObj.toString();
@@ -111,25 +91,29 @@ class CodeAttribTest {
     }
     @Test
     void givenPopulatedCodeNode_getJson() {
-        String expected = "{\"attribStruct\":{\"allowed\":[\"IMPORT\",\"CLASS_FIELD\",\"METHOD\"],\"required\":"+
+        String expected = "{\"structBody\":{\"allowed\":[\"IMPORT\",\"CLASS_FIELD\",\"METHOD\"],\"required\":"+
                 "[\"IMPORT\"]},\"attribModifier\":{\"allowed\":[\"NAME\",\"VISIBILITY\",\"ABSTRACT\",\"STATIC\","+
                 "\"FINAL\",\"IMPLEMENTS\",\"EXTENDS\"],\"attributes\":{\"EXTENDS\":[],\"FINAL\":[\"FALSE\"],"+
                 "\"VISIBILITY\":[\"PUBLIC\"],\"IMPLEMENTS\":[],\"ABSTRACT\":[\"FALSE\"],\"STATIC\":[\"FALSE\"]},"+
                 "\"required\":[\"NAME\"]},\"codeNodeType\":\"CLASS\"}";
-        ICodeNode codeNode = mockCodeNode();
+        ICodeNode codeNode = mockSource.mockCodeNode();
         System.out.println(codeNode.csvString());
         JSONObject jsonObj = codeNode.toJson();
         String actual = jsonObj.toString();
         System.out.println(jsonObj);
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
-    void reflect() {
+    void testUtilEnum() {
         MODIFIER mod = Glob.UTIL_ENUM.fromString(MODIFIER.class, "ATTRIB_SCOPE");
+        Assertions.assertEquals(mod, ATTRIB_SCOPE);
+
         System.out.println("A: " + mod);
         mod = Glob.UTIL_ENUM.fromString(MODIFIER.class, "BOOBOO");
-        System.out.println("B: " + mod);
+        Assertions.assertNull(mod);
+
         ENU_DATA_TYPE enu = Glob.UTIL_ENUM.fromString(ENU_DATA_TYPE.class, "VOID");
-        System.out.println("C: " + enu);
+        Assertions.assertEquals(enu, ENU_DATA_TYPE.VOID);
     }
 }

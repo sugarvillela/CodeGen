@@ -1,19 +1,11 @@
 package utiljson;
 
-import codedef.iface.ICodeNode;
-import codedef.impl.PrototypeFactory;
 import codedef.modifier.CODE_NODE;
 import codedef.modifier.MODIFIER;
 import err.ERR_TYPE;
-import generictree.impl.CodeNodeTree;
-import langdef.LangConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
-
-import java.util.Iterator;
-
-import static codedef.modifier.MODIFIER.*;
 
 public class UtilJson {
     private static UtilJson instance;

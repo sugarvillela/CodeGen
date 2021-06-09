@@ -14,6 +14,11 @@ public class ParseTreeNode<T> extends GTreeNodeBase<T> {
     public ParseTreeNode(){}
 
     @Override
+    protected IGTreeNode<T> newImplTypeNode() {
+        return new ParseTreeNode<>();
+    }
+
+    @Override
     public void setOp(char op) {
         this.op = op;
     }
@@ -43,20 +48,7 @@ public class ParseTreeNode<T> extends GTreeNodeBase<T> {
         return wrapped;
     }
 
-    @Override
-    public void addChild(IGTreeNode<T> child) {
-        child.setParent(this);
-        child.setLevel(level + 1);
-        children.add(child);
-    }
 
-    @Override
-    public void addChild(String identifier, T payload) {
-        IGTreeNode<T> child = new ParseTreeNode<>();
-        child.setIdentifier(identifier);
-        child.setPayload(payload);
-        this.addChild(child);
-    }
 
 
     @Override

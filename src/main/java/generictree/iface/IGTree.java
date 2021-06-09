@@ -1,9 +1,13 @@
 package generictree.iface;
 
+import java.util.List;
+
 public interface IGTree <T>{
     IGTreeNode <T> getRoot();
-    boolean put(String... path);
-    boolean put(T payload, String... path);
+    IGTreeNode <T> getLastAdded();
+
+    IGTreeNode <T> add(T payload, String... path);
+    IGTreeNode <T> add(T payload, List<String> path);
     void clear();
 
     IGTreeParse<T> getParse();

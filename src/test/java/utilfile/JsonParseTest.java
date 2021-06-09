@@ -7,6 +7,7 @@ import generictree.iface.IGTreeParse;
 import generictree.iface.IGTreeTask;
 import generictree.impl.CodeNodeTree;
 import generictree.task.TaskDisp;
+import mock.MockSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class JsonParseTest<T> {
+    MockSource mockSource = new MockSource();
     boolean show = true;
+
     private void assertEqNodes(List<IGTreeNode<String>> actual, String... expected){
         List<String> actualToString = new ArrayList<>();
         int i = 0;
@@ -42,30 +45,25 @@ public class JsonParseTest<T> {
 
     @Test
     void givenJSONObjectFile_retrieveJSONObject(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test1.json");
+        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("colors.json");
         System.out.println("filePath: " + filePath);
-        JSONObject jsonObj = new JsonObjFile().getJsonObject(filePath);
+        JSONObject jsonObj = new UtilFileJson().getJsonObject(filePath);
         System.out.println("jsonObj: " + jsonObj);
         String expected = "{\"attrib\":[{\"color\":\"red\",\"value\":\"#f00\"},{\"color\":\"green\",\"value\":\"#0f0\"},{\"color\":\"blue\",\"value\":\"#00f\"},{\"color\":\"cyan\",\"value\":\"#0ff\"},{\"color\":\"magenta\",\"value\":\"#f0f\"},{\"color\":\"yellow\",\"value\":\"#ff0\"},{\"color\":\"black\",\"value\":\"#000\"}]}";
         Assertions.assertEquals(expected, jsonObj.toString());
     }
     @Test
     void givenJSONArrayFile_retrieveJSONArray(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test3.json");
+        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("colors2.json");
         System.out.println("filePath: " + filePath);
-        JSONArray jsonArray = new JsonObjFile().getJsonArray(filePath);
+        JSONArray jsonArray = new UtilFileJson().getJsonArray(filePath);
         System.out.println("jsonArray: " + jsonArray);
         String expected = "[{\"attrib\":[{\"color\":\"red\",\"value\":\"#f00\"},{\"color\":\"green\",\"value\":\"#0f0\"},{\"color\":\"blue\",\"value\":\"#00f\"},{\"color\":\"cyan\",\"value\":\"#0ff\"},{\"color\":\"magenta\",\"value\":\"#f0f\"},{\"color\":\"yellow\",\"value\":\"#ff0\"},{\"color\":\"black\",\"value\":\"#000\"}]}]";
         Assertions.assertEquals(expected, jsonArray.toString());
     }
     @Test
     void givenJSONObjectFile5_buildTree(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test5.json");
-        System.out.println("filePath: " + filePath);
-        JSONObject jsonRoot = new JsonObjFile().getJsonObject(filePath);
-        JsonToCodeTree jsonTree = new JsonToCodeTree();
-        jsonTree.buildTree(jsonRoot);
-        CodeNodeTree pathTree = jsonTree.getTree();
+        CodeNodeTree pathTree = mockSource.getPopulatedTreeFromFile("test2.json");
 
         IGTreeParse<ICodeNode> parser = pathTree.getParse();
         IGTreeTask<ICodeNode> disp = new TaskDisp<>();
@@ -76,46 +74,22 @@ public class JsonParseTest<T> {
     }
     @Test
     void givenJSONObjectFile6_buildUnevenTree(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test6.json");
-        System.out.println("filePath: " + filePath);
-        JSONObject jsonRoot = new JsonObjFile().getJsonObject(filePath);
-        JsonToCodeTree jsonTree = new JsonToCodeTree();
-        jsonTree.buildTree(jsonRoot);
-        CodeNodeTree pathTree = jsonTree.getTree();
+        CodeNodeTree pathTree = mockSource.getPopulatedTreeFromFile("test3.json");
 
         IGTreeParse<ICodeNode> parser = pathTree.getParse();
         IGTreeTask<ICodeNode> disp = new TaskDisp<>();
         parser.breadthFirst(pathTree.getRoot(), disp);
 
         List<String> allPaths = pathTree.getParse().getAllPaths(pathTree.getRoot(), '-');
-        assertEqStrings(allPaths, "GLOB-package1-file1-class1-method1", "GLOB-package1-file1-class1-METHOD_BODY", "GLOB-package1-file1-class1-METHOD_ARGS-arg1", "GLOB-package1-file1-class1-METHOD_ARGS-arg2", "GLOB-package2");
+        System.out.println(String.join("\n", allPaths));
+        assertEqStrings(
+                allPaths,
+                "GLOB-package1-file1-class1-method1-METHOD_ARGS-arg1",
+                "GLOB-package1-file1-class1-method1-METHOD_ARGS-arg2",
+                "GLOB-package2"
+        );
     }
-    @Test
-    void test2(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test2.json");
-        System.out.println("filePath: " + filePath);
-        Object obj = new JsonObjFile().getObject(filePath);
-
-        System.out.println("jsonObj recurse: ");
-        IStrategy<Integer> strategy = new Display();
-        JsonRecurse<Integer> jsonRecurse = new JsonRecurse<>();
-        jsonRecurse.recurse(obj, strategy, -2);
-    }
-    @Test
-    void test3(){
-        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath("test2.json");
-        System.out.println("filePath: " + filePath);
-        Object obj = new JsonObjFile().getObject(filePath);
-
-        System.out.println("jsonObj recurse: ");
-        List<String> flatList = new ArrayList<>();
-        JsonFlattener flattened = new JsonFlattener(flatList);
-        flattened.recurse(obj);
-
-        for(String line : flatList){
-            System.out.println(line);
-        }
-    }
+    
     public interface IStrategy <T>{
         T increment(String key, T acc);
         void doTask(Object object, T acc);

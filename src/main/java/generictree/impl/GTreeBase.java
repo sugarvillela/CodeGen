@@ -8,11 +8,12 @@ import generictree.parse.GTreeParse;
 import generictree.task.TaskToList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class GTreeBase <T> implements IGTree<T> {
     protected final IGTreeParse<T> parseObject;
-    protected IGTreeNode<T> root;
+    protected IGTreeNode<T> root, lastAdded;
 
     public GTreeBase() {
         parseObject = new GTreeParse<>();
@@ -24,8 +25,8 @@ public abstract class GTreeBase <T> implements IGTree<T> {
     }
 
     @Override
-    public boolean put(String... path) {
-        return this.put(null, path);
+    public IGTreeNode<T> getLastAdded() {
+        return lastAdded;
     }
 
     @Override
@@ -36,9 +37,7 @@ public abstract class GTreeBase <T> implements IGTree<T> {
             this.getParse().breadthFirst(this.getRoot(), task);
             for(int i = list.size() -1; i >= 0; i--){
                 IGTreeNode<T> currNode = list.get(i);
-                //System.out.println(currNode.friendlyString());
                 if(!currNode.isLeaf()){
-                    //System.out.println("clear");
                     currNode.getChildren().clear();
                 }
             }
@@ -52,10 +51,9 @@ public abstract class GTreeBase <T> implements IGTree<T> {
     }
 
     protected String[] tokenizePathOnSingle(char splitChar, String... path){
-        String[] tok;
-        if(path.length == 1 && (tok = path[0].split("[" + splitChar + "]")).length > 1){
-            return tok;
-        }
-        return path;
+        return path[0].split("[" + splitChar + "]");
+    }
+    protected List<String> tokenizePathOnSingle(char splitChar, List<String> path){
+        return Arrays.asList(path.get(0).split("[" + splitChar + "]"));
     }
 }

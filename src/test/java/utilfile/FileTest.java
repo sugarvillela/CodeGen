@@ -1,5 +1,0 @@
-package utilfile;
-
-class FileTest {
-
-}

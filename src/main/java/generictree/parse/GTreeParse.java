@@ -26,8 +26,50 @@ public class GTreeParse<T> implements IGTreeParse<T> {
         return null;
     }
 
+    /*====PathTree algorithms: path as array==========================================================================*/
+
     @Override
-    public IGTreeNode<T> treeNodeFromPartialPath(int index, IGTreeNode<T> root, String... partialPath) {
+    public IGTreeNode<T> treeNodeFromPath(IGTreeNode<T> root, String... path) {
+        return treeNodeFromPath_recurse(0, root, path);
+    }
+
+    @Override
+    public IGTreeNode<T> treeNodeFromPartialPath(IGTreeNode<T> root, String... partialPath) {
+        return treeNodeFromPartialPath_recurse(0, root, partialPath);
+    }
+
+    @Override
+    public boolean isPathToLeaf(IGTreeNode<T> root, String... partialPath) {
+        IGTreeNode<T> found = this.treeNodeFromPartialPath_recurse(0, root, partialPath);
+        return found != null && found.isLeaf();
+    }
+
+    @Override
+    public IGTreeNode<T> addByPath(T payload, IGTreeNode<T> root, String... path) {
+        return addByPath_recurse(payload, 0, root, path);
+    }
+
+    @Override
+    public String[] pathFromPartialPath(IGTreeNode<T> root, String... partialPath) {
+        IGTreeNode<T> found = this.treeNodeFromPartialPath_recurse(0, root, partialPath);
+        return (found == null)? null : this.pathFromTreeNode(root, found);
+    }
+
+    private IGTreeNode<T> treeNodeFromPath_recurse(int index, IGTreeNode<T> root, String... path) {
+        if(index < path.length && root.is(path[index])){
+            if(index == path.length - 1){
+                return root;
+            }
+            IGTreeNode<T> foundNode;
+            for(IGTreeNode<T> child : root.getChildren()){
+                if((foundNode = treeNodeFromPath_recurse(index + 1, child, path)) != null){
+                    return foundNode;
+                }
+            }
+        }
+        return null;
+    }
+    private IGTreeNode<T> treeNodeFromPartialPath_recurse(int index, IGTreeNode<T> root, String... partialPath) {
         if(index < partialPath.length){
             if(root.is(partialPath[index])){
                 index++;
@@ -37,7 +79,68 @@ public class GTreeParse<T> implements IGTreeParse<T> {
             }
             IGTreeNode<T> foundNode;
             for(IGTreeNode<T> child : root.getChildren()){
-                if((foundNode = treeNodeFromPartialPath(index, child, partialPath)) != null){
+                if((foundNode = treeNodeFromPartialPath_recurse(index, child, partialPath)) != null){
+                    return foundNode;
+                }
+            }
+        }
+        return null;
+    }
+    private IGTreeNode<T> addByPath_recurse(T payload, int level, IGTreeNode<T> root, String... path) {
+        if(level < path.length - 1){
+            if(level == path.length - 2){
+                if(root.is(path[level])){
+                    return root.addChild(path[level + 1], payload);
+                }
+            }
+            else{
+                for(IGTreeNode<T> child : root.getChildren()){
+                    if(child.is(path[level + 1])){
+                        return addByPath_recurse(payload, level + 1, child, path);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /*====PathTree algorithms: path as list===========================================================================*/
+
+    @Override
+    public IGTreeNode<T> treeNodeFromPath(IGTreeNode<T> root, List<String> path) {
+        return treeNodeFromPath_recurse(0, root, path);
+    }
+
+    @Override
+    public IGTreeNode<T> treeNodeFromPartialPath(IGTreeNode<T> root, List<String> partialPath) {
+        return treeNodeFromPartialPath_recurse(0, root, partialPath);
+    }
+
+    @Override
+    public boolean isPathToLeaf(IGTreeNode<T> root, List<String> partialPath) {
+        IGTreeNode<T> found = this.treeNodeFromPartialPath(root, partialPath);
+        return found != null && found.isLeaf();
+    }
+
+    @Override
+    public IGTreeNode<T> addByPath(T payload, IGTreeNode<T> root, List<String> path) {
+        return addByPath_recurse(payload, 0, root, path);
+    }
+
+    @Override
+    public String[] pathFromPartialPath(IGTreeNode<T> root, List<String> partialPath) {
+        IGTreeNode<T> found = this.treeNodeFromPartialPath(root, partialPath);
+        return (found == null)? null : this.pathFromTreeNode(root, found);
+    }
+
+    private IGTreeNode<T> treeNodeFromPath_recurse(int index, IGTreeNode<T> root, List<String> path) {
+        if(index < path.size() && root.is(path.get(index))){
+            if(index == path.size() - 1){
+                return root;
+            }
+            IGTreeNode<T> foundNode;
+            for(IGTreeNode<T> child : root.getChildren()){
+                if((foundNode = treeNodeFromPath_recurse(index + 1, child, path)) != null){
                     return foundNode;
                 }
             }
@@ -45,20 +148,43 @@ public class GTreeParse<T> implements IGTreeParse<T> {
         return null;
     }
 
-    @Override
-    public String[] pathFromPartialPath(IGTreeNode<T> root, String... partialPath) {
-        IGTreeNode<T> found = this.treeNodeFromPartialPath(0, root, partialPath);
-        if(found != null){
-            return this.pathFromTreeNode(root, found);
-//            String[] fullPath = new String[found.level() + 1];
-//            do{
-//                fullPath[found.level()] = found.identifier();
-//            }
-//            while((found = found.parent()) != null);
-//            return fullPath;
+    private IGTreeNode<T> treeNodeFromPartialPath_recurse(int index, IGTreeNode<T> root, List<String> partialPath) {
+        if(index < partialPath.size()){
+            if(root.is(partialPath.get(index))){
+                index++;
+                if(index == partialPath.size()){
+                    return root;
+                }
+            }
+            IGTreeNode<T> foundNode;
+            for(IGTreeNode<T> child : root.getChildren()){
+                if((foundNode = treeNodeFromPartialPath_recurse(index, child, partialPath)) != null){
+                    return foundNode;
+                }
+            }
         }
         return null;
     }
+
+    private IGTreeNode<T> addByPath_recurse(T payload, int level, IGTreeNode<T> root, List<String> path) {
+        if(level < path.size() - 1){
+            if(level == path.size() - 2){
+                if(root.is(path.get(level))){
+                    return root.addChild(path.get(level + 1), payload);
+                }
+            }
+            else{
+                for(IGTreeNode<T> child : root.getChildren()){
+                    if(child.is(path.get(level + 1))){
+                        return addByPath_recurse(payload, level + 1, child, path);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /*====PathTree algorithms: find path==============================================================================*/
 
     @Override
     public String[] pathFromTreeNode(IGTreeNode<T> root, IGTreeNode<T> treeNode) {
@@ -71,35 +197,11 @@ public class GTreeParse<T> implements IGTreeParse<T> {
     }
 
     @Override
-    public boolean isPathToLeaf(IGTreeNode<T> root, String... partialPath) {
-        IGTreeNode<T> found = this.treeNodeFromPartialPath(0, root, partialPath);
-        return found != null && found.isLeaf();
-    }
-
-    @Override
-    public boolean putByPath(T payload, int level, IGTreeNode<T> root, String... path) {
-        if(level < path.length - 1){
-            if(level == path.length - 2){
-                if(root.is(path[level])){
-                    root.addChild(path[level + 1], payload);
-                    return true;
-                }
-            }
-            else{
-                for(IGTreeNode<T> child : root.getChildren()){
-                    if(child.is(path[level + 1])){
-                        return putByPath(payload, level + 1, child, path);
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
     public List<String> getAllPaths(IGTreeNode<T> root, char pathSep) {
-        return new AllPathsUtil(root, pathSep).getPaths();
+        return new AllPathsUtil<>(root, pathSep).getPaths();
     }
+
+    /*====General tree parse algorithms===============================================================================*/
 
     @Override
     public boolean preOrder(IGTreeNode<T> root, IGTreeTask<T> task) {

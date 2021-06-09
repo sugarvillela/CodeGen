@@ -15,7 +15,7 @@ public interface IAttribStruct  extends ICsv, ISerializableJson {
 
     boolean isRequired(CODE_NODE childEnum);
     void assertHaveRequiredChildren(List<ICodeNode> children);
-    void assertIsAllowedChild(CODE_NODE newChildEnum);
+    boolean isAllowedChild(CODE_NODE childEnum);
 
     IAttribStruct prototype();
 

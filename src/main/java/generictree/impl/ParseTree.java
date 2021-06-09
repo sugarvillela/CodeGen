@@ -9,6 +9,7 @@ import tokenizer.iface.ITokenizer;
 import tokenizer.impl.Tokenizer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** For cases where a delimiter-separated string will be split
  *  into a tree, e.g. a&b&!(b|c)
@@ -33,7 +34,7 @@ public class ParseTree<T> extends GTreeBase <T> {
     }
 
     @Override
-    public boolean put(T payload, String... path) {
+    public IGTreeNode<T> add(T payload, String... path) {
         root = new ParseTreeNode<>();
         root.setLevel(0);
         root.setIdentifier(path[0]);
@@ -52,8 +53,14 @@ public class ParseTree<T> extends GTreeBase <T> {
         }
         while(more);
 
-        return false;
+        return (lastAdded = root);
     }
+
+    @Override
+    public IGTreeNode<T> add(T payload, List<String> path) {
+        return null;
+    }
+
     private boolean split(IGTreeNode<T> currNode, char delim) {
         if(currNode.isLeaf()){
             String identifier = currNode.identifier();
