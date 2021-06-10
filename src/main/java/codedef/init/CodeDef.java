@@ -23,17 +23,22 @@ import static codedef.modifier.ENU_VISIBILITY.*;
 import static codedef.modifier.MODIFIER.*;
 
 public class CodeDef {
-    private static final int EXPECTED_SIZE = 13;
+    public static final class LangAgnosticAssumptions{
+        public static final String RETURN = "return";
+        public static final String ASSIGN = "=";
+        public static final String BREAK = "break;";
+    };
     private final HashMap<CODE_NODE, ICodeNode> prototypes;
     
     public CodeDef() {
-        prototypes = new HashMap<>((int)Math.ceil(EXPECTED_SIZE * 1.34));
+        prototypes = new HashMap<>();
         initLargeScopes();
         initSmallScopes();
     }
     public final HashMap<CODE_NODE, ICodeNode> getPrototypes(){
         return this.prototypes;
     }
+
     private void initLargeScopes(){
         this.initGlob(GLOB);
         this.initPackage(PACKAGE);
@@ -61,9 +66,9 @@ public class CodeDef {
         this.initConjunction(CONJUNCTION);
         this.initComparison(COMPARISON);
         this.initVarDef(VAR_DEF);
-        this.initLeafyText(RETURN, "return");
-        this.initLeafyText(ASSIGN, "=");
-        this.initLeafyText(BREAK, "break");
+        this.initLeafyText(RETURN, LangAgnosticAssumptions.RETURN);
+        this.initLeafyText(ASSIGN, LangAgnosticAssumptions.ASSIGN);
+        this.initLeafyText(BREAK, LangAgnosticAssumptions.BREAK);
         this.initComment(COMMENT);
         this.initComment(COMMENT_LONG);
         this.initSwitch(SWITCH);
@@ -116,7 +121,7 @@ public class CodeDef {
     }
     private void initImportItem(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(PATH);
+        attribModifier.initRequired(LIT_VAL);
         attribModifier.initAllowed(STATIC);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, null);
@@ -287,7 +292,7 @@ public class CodeDef {
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initRequired(EXPR);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
 
@@ -348,7 +353,7 @@ public class CodeDef {
         attribModifier.initRequired(LIT_VAL);
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(CODE_BLOCK);
+        structBody.initAllowed(CODE_BLOCK, EXPR);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
@@ -357,7 +362,7 @@ public class CodeDef {
         IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(CODE_BLOCK);
+        structBody.initAllowed(CODE_BLOCK, EXPR);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);

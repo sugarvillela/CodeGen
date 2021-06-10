@@ -35,7 +35,7 @@ public class JsonToCodeTree {
     private void recurse(JSONObject jsonObj, int level){
         JSONObject jsonAttr = Glob.UTIL_JSON.getJObj(jsonObj, "attributes");
         CODE_NODE codeNodeEnum = Glob.UTIL_JSON.getCodeNodeEnu(jsonAttr, CODE_NODE_TYPE.toString());
-        ICodeNode codeNode = Glob.PROTOTYPE_FACTORY.getPrototype(codeNodeEnum);
+        ICodeNode codeNode = Glob.PROTOTYPE_FACTORY.get(codeNodeEnum);
         codeNode.getAttribModifier().fromJson(jsonAttr);
 
         String identifier = Glob.UTIL_JSON.getStr(jsonAttr, NAME.toString());

@@ -1,6 +1,6 @@
 package codedef.iface;
 
-import generictree.iface.IGTreeNode;
+import codedef.modifier.MODIFIER;
 import iface_global.ICsv;
 import codedef.modifier.CODE_NODE;
 import iface_global.ISerializableJson;
@@ -15,12 +15,16 @@ public interface ICodeNode extends ICsv, ISerializableJson {
     IAttribStruct getStructHeader();
     IAttribStruct getStructBody();
 
-    void setParentTreeNode(IGTreeNode<ICodeNode> parentTreeNode);
-    IGTreeNode<ICodeNode> getParentTreeNode();
+    ICodeNode setChildren(ICodeNode... childNodes);
+    List<ICodeNode> getChildren();
 
-    // recursive tree helpers
-    void finalizeTree(IGTreeNode<ICodeNode> parentTreeNode);
-    void display(IGTreeNode<ICodeNode> parentTreeNode);
+    ICodeNode putAttrib(MODIFIER modifier, String... values);
+    String[] getAttrib(MODIFIER modifier);
+
+    void setParentNode(ICodeNode parentNode);
+    ICodeNode getParentNode();
+
+    void display(int level);
 
     ITranslator translator();
     ICodeNode prototype();

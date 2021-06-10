@@ -80,12 +80,13 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     @Override
-    public void assertHaveRequiredModifiers() {
+    public MODIFIER reportMissingModifier() {
         for(MODIFIER modifier : required){
             if(!attributes.containsKey(modifier)){
-                Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, modifier.toString());
+                return modifier;
             }
         }
+        return null;
     }
 
     @Override
@@ -225,7 +226,7 @@ public class AttribModifier  implements IAttribModifier {
     protected String mapToString(HashMap<MODIFIER, String[]> map){
         return map.entrySet()
                 .stream()
-                .map(e -> e.getKey() + ":" + Arrays.toString(e.getValue()))
+                .map(e -> e.getKey() + "=" + Arrays.toString(e.getValue()))
                 .collect(Collectors.joining(","));
     }
 

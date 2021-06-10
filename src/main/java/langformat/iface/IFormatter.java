@@ -11,7 +11,8 @@ public interface IFormatter {
     }
 
     default void addStatement(StringBuilder code, String text){
-        code.append(this.trimBack(text)).append(";\n");
+        code.append(this.trimBack(text));
+        code.append(";\n");
     }
 
     default void addBlank(StringBuilder code){

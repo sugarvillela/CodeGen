@@ -2,6 +2,7 @@ package tokenizer.impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import tokenizer.iface.ITokenizer;
 
 
 import java.util.List;
@@ -22,5 +23,14 @@ class TokenizerTest {
         String unTok = String.join("|", tok);
         System.out.println(unTok);
         assertEquals("[|{|color|:|\"red\"|,|value|:|\"#f00\"|}|]", unTok);
+    }
+    @Test
+    void givenTextWithNewLineAndQuotes_splitOnNewLines(){
+        ITokenizer tokenizer = Tokenizer.builder().delimiters('\n').keepSkipSymbol().keepEscapeSymbol().skipSymbols("'\"").build();
+        String text = "String classField1 = \"comprende\";\n    public";
+        List<String> tok = tokenizer.setText(text).parse().toList();
+        for(String t : tok){
+            System.out.println(t);
+        }
     }
 }

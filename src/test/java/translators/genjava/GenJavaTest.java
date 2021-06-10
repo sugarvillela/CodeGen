@@ -14,7 +14,7 @@ class GenJavaTest {
     
     @Test
     void givenPopulatedClassNode_outputRightOrder(){
-        ICodeNode codeNode = Glob.PROTOTYPE_FACTORY.getPrototype(CLASS);
+        ICodeNode codeNode = Glob.PROTOTYPE_FACTORY.get(CLASS);
         codeNode.getAttribModifier().put(IMPLEMENTS, "Interface1", "Interface2", "Interface3");
         codeNode.getAttribModifier().put(STATIC, "TRUE");
         codeNode.getAttribModifier().put(NAME, "Class1");

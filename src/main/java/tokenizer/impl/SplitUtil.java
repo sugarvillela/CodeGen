@@ -39,7 +39,7 @@ public class SplitUtil implements ISplitUtil {
             return new String[]{text, null};
         }
         cSymbols = new Stack<>();
-        String[] lastResult = new String[2];
+        String[] pair = new String[2];
         int i = 0, j = 0, k = 0, len = text.length();
         boolean escaped = false;
         for (i = 0; i < len && k < 2; i++) {
@@ -62,11 +62,11 @@ public class SplitUtil implements ISplitUtil {
                 else if(!enterSkipArea(curr) && i >= startPos && isDelimiter(curr)){
                     if(haveText(i, j)){
                         if(k > 0){
-                            lastResult[k] = text.substring(j);
-                            return lastResult;
+                            pair[k] = text.substring(j);
+                            return pair;
                         }
                         else{
-                            lastResult[k++] = text.substring(j, i);
+                            pair[k++] = text.substring(j, i);
                         }
                     }
                     j = i + 1;
@@ -75,9 +75,9 @@ public class SplitUtil implements ISplitUtil {
         }
 
         if(k < 2 && haveText(i, j)){
-            lastResult[k] = (text.substring(j));
+            pair[k] = (text.substring(j));
         }
-        return lastResult;
+        return pair;
     }
 
     private ISplitUtil setDelimiter(char... delimiter) {

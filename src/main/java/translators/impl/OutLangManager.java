@@ -2,6 +2,7 @@ package translators.impl;
 
 import codedef.modifier.ENU_OUT_LANG;
 import langformat.iface.IFormatStrategy;
+import langformat.impl.FormatStrategyCType;
 import translators.genjava.JTranslators;
 import translators.iface.IOutLangManager;
 import translators.iface.ITranslatorFactory;
@@ -41,7 +42,7 @@ public class OutLangManager implements IOutLangManager {
     public IFormatStrategy getFormatStrategy() {
         switch(outLangEnum){
             case JAVA:
-                return (formatStrategy == null)? (formatStrategy = new IFormatStrategy(){}) : formatStrategy;
+                return (formatStrategy == null)? (formatStrategy = new FormatStrategyCType()) : formatStrategy;
         }
         return null;
     }

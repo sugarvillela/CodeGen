@@ -16,7 +16,7 @@ public interface IAttribModifier extends ICsv, ISerializableJson {
     HashMap<MODIFIER, String[]> getAttributes();
 
     boolean isRequired(MODIFIER modifier);
-    void assertHaveRequiredModifiers();
+    MODIFIER reportMissingModifier();
     void assertIsAllowed(MODIFIER modifier);
 
     void put(MODIFIER modifier, String... values);

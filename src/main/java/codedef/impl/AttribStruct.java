@@ -1,9 +1,7 @@
 package codedef.impl;
 
-import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import runstate.Glob;
 import codedef.iface.IAttribStruct;
 import codedef.iface.ICodeNode;
 import codedef.modifier.CODE_NODE;
@@ -50,20 +48,16 @@ public class AttribStruct implements IAttribStruct {
     }
 
     @Override
-    public boolean isRequired(CODE_NODE childEnum) {
-        return required != null && required.contains(childEnum);
-    }
-
-    @Override
-    public void assertHaveRequiredChildren(List<ICodeNode> children) {
+    public CODE_NODE reportMissingChild(List<ICodeNode> children) {
         if(required != null){
             Stream<ICodeNode> stream = children.stream();
             for(CODE_NODE requiredEnum : required){
-                if(stream.noneMatch(child -> child.codeNodeEnum() == requiredEnum)){
-                    Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, requiredEnum.toString());
+                if(stream.noneMatch(child -> (child.enumGroup() == requiredEnum || child.codeNodeEnum() == requiredEnum))){
+                    return requiredEnum;
                 }
             }
         }
+        return null;
     }
 
     @Override

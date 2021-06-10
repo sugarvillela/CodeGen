@@ -19,7 +19,7 @@ public class PrototypeFactory {
         prototypes = new CodeDef().getPrototypes();
     }
 
-    public ICodeNode getPrototype(CODE_NODE codeNodeEnum){
+    public ICodeNode get(CODE_NODE codeNodeEnum){
         return prototypes.get(codeNodeEnum).prototype();
     }
 }

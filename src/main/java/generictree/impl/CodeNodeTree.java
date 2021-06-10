@@ -25,14 +25,14 @@ public class CodeNodeTree extends SteadyPathTree<ICodeNode> {
     public void finalizeTree() {
         IGTreeNode<ICodeNode> root = pathTree.getRoot();
         if(root != null){
-            root.getPayload().finalizeTree(root);
+            //root.getPayload().finalizeTree(null);
         }
     }
     @Override
     public void display() {
         IGTreeNode<ICodeNode> root = pathTree.getRoot();
         if(root != null){
-            root.getPayload().display(root);
+            root.getPayload().display(0);
         }
     }
 

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import tokenizer.iface.IMatchUtil;
 import tokenizer.iface.ISplitUtil;
 
+import java.util.List;
+
 class SplitUtilTest {
     @Test
     void givenStringWithSpace_split() {
@@ -79,6 +81,12 @@ class SplitUtilTest {
         expected = "\"eight nine\"|ten";
         actual = String.join("|", pair);
         Assertions.assertEquals(expected, actual);
+
+        text = "\"eight nine ten\"";
+        pair = splitUtil.split(text);
+        expected = "\"eight nine ten\"|null";
+        actual = String.join("|", pair);
+        Assertions.assertEquals(expected, actual);
     }
     @Test
     void givenStringWithEscapeSymbol_splitOnNext() {
@@ -118,22 +126,5 @@ class SplitUtilTest {
         expected = "zero one two_three four|five six seven eight nine ten";;
         actual = String.join("|", pair);
         Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenStringWithEmbeddedTarget_findTarget(){
-        IMatchUtil matchUtil = new MatchUtil("D_END");
-        String text = "zero D_E D_END three four five six seven eight nine ten";
-        int actual1 = -1, actual2 = -1;
-        int expected1 = 9, expected2 = 14;
-        for(int i = 0; i < text.length(); i++){
-            char curr = text.charAt(i);
-            if(matchUtil.haveMatch(i, curr)){
-                actual1 = matchUtil.indexStart();
-                actual2 = matchUtil.indexFinish();;
-            }
-        }
-        Assertions.assertEquals(expected1, actual1);
-        Assertions.assertEquals(expected2, actual2);
     }
 }

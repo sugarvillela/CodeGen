@@ -7,11 +7,14 @@ import codedef.impl.AttribModifier;
 import codedef.impl.AttribStruct;
 import codedef.modifier.*;
 import err.ERR_TYPE;
-import generictree.iface.IGTreeNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 import translators.iface.ITranslator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static codedef.modifier.MODIFIER.IS_HEADER;
 import static codedef.modifier.MODIFIER.NAME;
@@ -22,8 +25,9 @@ public class CodeNode implements ICodeNode {
     protected final IAttribStruct structHeader;
     protected final IAttribStruct structBody;
     protected final CodeNodeContentToJson contentToJson;
-    protected IGTreeNode<ICodeNode> parentTreeNode;
+    protected ICodeNode parentNode;
     protected final ITranslator translator;
+    protected final List<ICodeNode> children;
 
     public CodeNode(CODE_NODE codeNodeEnum, CODE_NODE enumGroup, IAttribModifier attribModifier, IAttribStruct structHeader, IAttribStruct structBody) {
         this.codeNodeEnum = codeNodeEnum;
@@ -33,6 +37,7 @@ public class CodeNode implements ICodeNode {
         this.structBody = (structBody == null)? new AttribStruct(codeNodeEnum) : structBody;
         this.translator = Glob.OUT_LANG_MANAGER.getTranslatorFactory().get(codeNodeEnum);
         this.contentToJson = new CodeNodeContentToJson();
+        this.children = new ArrayList<>();
     }
 
     @Override
@@ -61,60 +66,80 @@ public class CodeNode implements ICodeNode {
     }
 
     @Override
-    public void setParentTreeNode(IGTreeNode<ICodeNode> parentTreeNode) {
-        this.parentTreeNode = parentTreeNode;
-    }
-
-    @Override
-    public IGTreeNode<ICodeNode> getParentTreeNode() {
-        return this.parentTreeNode;
-    }
-
-    @Override
-    public void finalizeTree(IGTreeNode<ICodeNode> parentTreeNode) {
-        this.parentTreeNode = parentTreeNode;
-        for(IGTreeNode<ICodeNode> childTreeNode : parentTreeNode.getChildren()){
-            ICodeNode childPayload = childTreeNode.getPayload();
-
-            // link parent tree node with payload
-            childPayload.setParentTreeNode(childTreeNode);
+    public ICodeNode setChildren(ICodeNode... childNodes) {
+        List<ICodeNode> childNodesList = Arrays.asList(childNodes);
+        for(ICodeNode child : childNodesList){
+            child.setParentNode(this);
+            {
+                MODIFIER missingModifier;
+                if((missingModifier = child.getAttribModifier().reportMissingModifier()) != null){
+                    String desc = String.format("%s in %s", missingModifier, codeNodeEnum);
+                    Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, desc);
+                }
+            }
 
             // Label payload header or body, depending on which attribStruct allows it
             // If not explicitly assigned to header, any small scope is allowed in body
-            CODE_NODE enumActual = childPayload.codeNodeEnum();
-            CODE_NODE enumAlias = childPayload.enumGroup();
+            CODE_NODE enumActual = child.codeNodeEnum();
+            CODE_NODE enumAlias = child.enumGroup();
             if(structHeader.isAllowedChild(enumActual) || structHeader.isAllowedChild(enumAlias)){
-                childPayload.getAttribModifier().put(IS_HEADER, ENU_BOOLEAN.TRUE.toString());
+                child.getAttribModifier().put(IS_HEADER, ENU_BOOLEAN.TRUE.toString());
             }
             else if(structBody.isAllowedChild(enumActual) || structBody.isAllowedChild(enumAlias)){
-                childPayload.getAttribModifier().put(IS_HEADER, ENU_BOOLEAN.FALSE.toString());
+                child.getAttribModifier().put(IS_HEADER, ENU_BOOLEAN.FALSE.toString());
             }
             else{
-                Glob.ERR.kill(
-                        ERR_TYPE.DISALLOWED_NESTING,
-                        enumActual.toString() + " in " + this.codeNodeEnum().toString());
+                Glob.ERR.kill(ERR_TYPE.DISALLOWED_NESTING, String.format("%s in %s", enumActual, this.codeNodeEnum));
             }
-//            String[] isHeader = childPayload.getAttribModifier().get(IS_HEADER);
-//            String isHeaderStr = (isHeader == null)? "FALSE" : isHeader[0];
-//            System.out.printf("%s%s: %s: header = %s \n",
-//                    new String(new char[childTreeNode.level() * 4]).replace('\0', ' '),
-//                    childPayload.codeNodeEnum(),
-//                    childPayload.getAttribModifier().get(NAME)[0],
-//                    isHeaderStr
-//            );
-            childPayload.finalizeTree(childTreeNode);
         }
+        children.addAll(childNodesList);
+
+        CODE_NODE missingChild;
+        if(
+            (missingChild = structHeader.reportMissingChild(children)) != null ||
+            (missingChild = structBody.reportMissingChild(children)) != null
+        ) {
+            Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, String.format("%s in %s", missingChild, this.codeNodeEnum));
+        }
+
+        return this;
     }
 
     @Override
-    public void display(IGTreeNode<ICodeNode> parentTreeNode) {
+    public List<ICodeNode> getChildren() {
+        return children;
+    }
+
+    @Override
+    public ICodeNode putAttrib(MODIFIER modifier, String... values) {
+        attribModifier.put(modifier, values);
+        return this;
+    }
+
+    @Override
+    public String[] getAttrib(MODIFIER modifier) {
+        return attribModifier.get(modifier);
+    }
+
+    @Override
+    public void setParentNode(ICodeNode parentNode) {
+        this.parentNode = parentNode;
+    }
+
+    @Override
+    public ICodeNode getParentNode() {
+        return parentNode;
+    }
+
+    @Override
+    public void display(int level) {
         System.out.printf("%s%s: %s \n",
-                new String(new char[parentTreeNode.level() * 4]).replace('\0', ' '),
+                new String(new char[level * 4]).replace('\0', ' '),
                 codeNodeEnum,
                 attribModifier.get(NAME)[0]
         );
-        for(IGTreeNode<ICodeNode> childTreeNode : parentTreeNode.getChildren()){
-            childTreeNode.getPayload().display(childTreeNode);
+        for(ICodeNode childNode : this.getChildren()){
+            childNode.display(level + 1);
         }
     }
 
@@ -166,15 +191,11 @@ public class CodeNode implements ICodeNode {
             return out;
         }
         private JSONArray getChildren(ICodeNode codeNode){
-            IGTreeNode<ICodeNode> parentTreeNode = codeNode.getParentTreeNode();
-            if(parentTreeNode == null){
-                Glob.ERR_DEV.kill(ERR_TYPE.DEV_ERROR);
+            JSONArray jsonChildren = new JSONArray();
+            for(ICodeNode childNode : codeNode.getChildren()){
+                jsonChildren.put(childNode.toJson());
             }
-            JSONArray children = new JSONArray();
-            for(ICodeNode childPayload : parentTreeNode.getPayloadChildren()){
-                children.put(childPayload.toJson());
-            }
-            return children;
+            return jsonChildren;
         }
     }
 }

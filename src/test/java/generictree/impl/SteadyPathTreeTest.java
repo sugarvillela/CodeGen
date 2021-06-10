@@ -4,7 +4,6 @@ import generictree.iface.IGTreeNode;
 import generictree.iface.IGTreeParse;
 import generictree.iface.IGTreeTask;
 import generictree.iface.ISteadyPathTree;
-import generictree.task.TaskCodeNodeParent;
 import generictree.task.TaskToList;
 import mock.MockSource;
 import org.json.JSONObject;
@@ -219,8 +218,6 @@ class SteadyPathTreeTest {
         CodeNodeTree pathTree = mockSource.getPopulatedTree2();
         IGTreeParse<ICodeNode> parser = pathTree.getParse();
 
-        IGTreeTask<ICodeNode> parentLinker = new TaskCodeNodeParent();
-        parser.preOrder(pathTree.getRoot(), parentLinker);
         JSONObject jsonRoot = pathTree.getRoot().getPayload().toJson();
         System.out.println("=====================done=====================");
         //System.out.println(jsonRoot.toString(2));
@@ -235,8 +232,6 @@ class SteadyPathTreeTest {
         CodeNodeTree pathTree = mockSource.getPopulatedTree3();
         IGTreeParse<ICodeNode> parser = pathTree.getParse();
 
-        IGTreeTask<ICodeNode> parentLinker = new TaskCodeNodeParent();
-        parser.preOrder(pathTree.getRoot(), parentLinker);
         JSONObject jsonRoot = pathTree.getRoot().getPayload().toJson();
         System.out.println("=====================done=====================");
         //System.out.println(jsonRoot.toString(2));

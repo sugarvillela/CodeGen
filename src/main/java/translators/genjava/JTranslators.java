@@ -4,9 +4,9 @@ import codedef.iface.ICodeNode;
 import codedef.modifier.CODE_NODE;
 import codedef.modifier.MODIFIER;
 import err.ERR_TYPE;
-import generictree.iface.IGTreeNode;
 import langformat.iface.*;
 import langformat.impl.Accumulator;
+import langformat.impl.FormatStrategyCType;
 import langformat.impl.Formatter;
 import langformat.impl.NullableUtil;
 import runstate.Glob;
@@ -21,7 +21,7 @@ import static codedef.modifier.MODIFIER.*;
 
 public class JTranslators implements ITranslatorFactory {
     public JTranslators(){
-        Formatter.initInstance(new IFormatStrategy() {});
+        Formatter.initInstance(new FormatStrategyCType());
     }
 
     @Override
@@ -139,15 +139,12 @@ public class JTranslators implements ITranslatorFactory {
             headerChildren = new ArrayList<>();
             bodyChildren = new ArrayList<>();
 
-            IGTreeNode<ICodeNode> parentTreeNode = codeNode.getParentTreeNode();
-            if(parentTreeNode != null){
-                for(ICodeNode childNode : parentTreeNode.getPayloadChildren()){
-                    if(nullableUtil.extractBoolean(childNode.getAttribModifier().get(IS_HEADER))){
-                        headerChildren.add(childNode);
-                    }
-                    else{
-                        bodyChildren.add(childNode);
-                    }
+            for(ICodeNode childNode : codeNode.getChildren()){
+                if(nullableUtil.extractBoolean(childNode.getAttribModifier().get(IS_HEADER))){
+                    headerChildren.add(childNode);
+                }
+                else{
+                    bodyChildren.add(childNode);
                 }
             }
 
@@ -206,7 +203,7 @@ public class JTranslators implements ITranslatorFactory {
             if(nullableUtil.extractBoolean(attributes.get(STATIC))){
                 formatter.addWord_(code, "static");
             }
-            if((value = nullableUtil.extractString(attributes.get(PATH))) != null){
+            if((value = nullableUtil.extractString(attributes.get(LIT_VAL))) != null){
                 formatter.addStatement(code, value);
             }
             return this;
@@ -222,8 +219,8 @@ public class JTranslators implements ITranslatorFactory {
                 formatter.addWord_(code, value.toLowerCase());
             }
             if(nullableUtil.extractBoolean(attributes.get(STATIC))){
-                IGTreeNode<ICodeNode> treeNode = codeNode.getParentTreeNode();
-                if(treeNode != null && treeNode.getPayload().codeNodeEnum() != CODE_NODE.CLASS){
+                ICodeNode parentNode = codeNode.getParentNode();
+                if(parentNode != null && parentNode.codeNodeEnum() != CODE_NODE.CLASS){
                     Glob.ERR.check(ERR_TYPE.LANGUAGE_ERR, "static");
                 }
                 formatter.addWord_(code, "static");
@@ -266,10 +263,6 @@ public class JTranslators implements ITranslatorFactory {
                 formatter.addWord_(code, value.toLowerCase());
             }
             if(nullableUtil.extractBoolean(attributes.get(STATIC))){
-                IGTreeNode<ICodeNode> treeNode = codeNode.getParentTreeNode();
-                if(treeNode != null && treeNode.getPayload().codeNodeEnum() != CODE_NODE.CLASS){
-                    Glob.ERR.check(ERR_TYPE.LANGUAGE_ERR, "static");
-                }
                 formatter.addWord_(code, "static");
             }
             if(nullableUtil.extractBoolean(attributes.get(ABSTRACT))){
@@ -467,14 +460,13 @@ public class JTranslators implements ITranslatorFactory {
             String value;
             IAccumulator acc = new Accumulator(" ");
             if((value = nullableUtil.extractString(attributes.get(DATA_TYPE))) != null){
-                formatter.addWord_(code, this.mapDataTypeEnum(value));
+                acc.add(this.mapDataTypeEnum(value));
             }
             if((value = nullableUtil.extractString(attributes.get(NAME))) != null){
-                formatter.addWord_(code, value);
+                acc.add(value);
             }
             if((value = nullableUtil.extractString(attributes.get(VAR_VALUE))) != null){
-                formatter.addWord_(code, "=");
-                formatter.addWord_(code, value);
+                acc.add("= " + value);
             }
             return acc.finish();
         }
@@ -555,7 +547,7 @@ public class JTranslators implements ITranslatorFactory {
         @Override
         public ITranslator body(){
             String value = nullableUtil.extractString(codeNode.getAttribModifier().get(LIT_VAL));
-            formatter.addWord_(code, "case " + value + ":");
+            formatter.addLine(code, "case " + value + ":");
 
             for(ICodeNode childNode : bodyChildren){
                 formatter.addLine(code, childNode.translator().go(childNode));
