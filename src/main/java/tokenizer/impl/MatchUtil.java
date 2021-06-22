@@ -19,6 +19,16 @@ public class MatchUtil implements IMatchUtil {
     }
 
     @Override
+    public IMatchUtil setSkipSymbols(String oSymbols) {
+        return this;
+    }
+
+    @Override
+    public IMatchUtil setSkipSymbols(char oSymbol, char cSymbol) {
+        return this;
+    }
+
+    @Override
     public IMatchUtil setNeedle(String targetText) {
         this.needle = targetText;
         this.k = 0;
@@ -28,12 +38,6 @@ public class MatchUtil implements IMatchUtil {
     @Override
     public IMatchUtil setHaystack(String haystack) {
         this.haystack = haystack;
-        return this;
-    }
-
-    @Override
-    public IMatchUtil setDeleteNeedle(boolean deleteNeedle) {
-        this.deleteNeedle = deleteNeedle;
         return this;
     }
 
@@ -52,10 +56,29 @@ public class MatchUtil implements IMatchUtil {
                 break;
             }
         }
-        if(deleteNeedle){
-            for(int i = hitMap.size() -2; i >= 0; i -= 2){
-                haystack = haystack.substring(0, hitMap.get(i)) + haystack.substring(hitMap.get(i + 1));
-            }
+        return this;
+    }
+
+    @Override
+    public IMatchUtil removeAll() {
+        for(int i = hitMap.size() -2; i >= 0; i -= 2){
+            haystack = haystack.substring(0, hitMap.get(i)) + haystack.substring(hitMap.get(i + 1));
+        }
+        return this;
+    }
+
+    @Override
+    public IMatchUtil replaceAll(String replacement) {
+        for(int i = hitMap.size() -2; i >= 0; i -= 2){
+            haystack = haystack.substring(0, hitMap.get(i)) + replacement + haystack.substring(hitMap.get(i + 1));
+        }
+        return this;
+    }
+
+    @Override
+    public IMatchUtil replaceAll(char replacement) {
+        for(int i = hitMap.size() -2; i >= 0; i -= 2){
+            haystack = haystack.substring(0, hitMap.get(i)) + replacement + haystack.substring(hitMap.get(i + 1));
         }
         return this;
     }

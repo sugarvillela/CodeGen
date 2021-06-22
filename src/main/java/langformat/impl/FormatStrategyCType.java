@@ -19,10 +19,9 @@ public class FormatStrategyCType implements IFormatStrategy {
 
     @Override
     public int checkLine(String text) {
-        return matchUtil.setDeleteNeedle(false).setNeedle("{").numOccurs()
-                - matchUtil.setNeedle("}").numOccurs()
-                + matchUtil.setDeleteNeedle(true).setNeedle(INC_.toString()).numOccurs()
-                - matchUtil.setNeedle(DEC_.toString()).numOccurs();
+        return matchUtil.setHaystack(text).
+                setNeedle("{").parse().numOccurs()
+                - matchUtil.setNeedle("}").parse().numOccurs();
     }
 
     @Override

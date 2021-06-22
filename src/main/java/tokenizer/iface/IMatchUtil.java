@@ -7,13 +7,18 @@ import java.util.List;
  *  Also use to map multiple match points or remove all */
 public interface IMatchUtil {
     // setup
+    IMatchUtil setSkipSymbols(String oSymbols);
+    IMatchUtil setSkipSymbols(char oSymbol, char cSymbol);
     IMatchUtil setNeedle(String needle);
     IMatchUtil setHaystack(String haystack);
-    IMatchUtil setDeleteNeedle(boolean deleteNeedle);
+
     IMatchUtil setMatchOnce(boolean matchOnce);
 
     // run
     IMatchUtil parse();
+    IMatchUtil removeAll();
+    IMatchUtil replaceAll(String replacement);
+    IMatchUtil replaceAll(char replacement);
     boolean parseByChar(int i);// core method
 
     // state after run

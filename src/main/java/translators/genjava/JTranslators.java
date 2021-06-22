@@ -548,10 +548,12 @@ public class JTranslators implements ITranslatorFactory {
         public ITranslator body(){
             String value = nullableUtil.extractString(codeNode.getAttribModifier().get(LIT_VAL));
             formatter.addLine(code, "case " + value + ":");
+            formatter.addInc(code);
 
             for(ICodeNode childNode : bodyChildren){
                 formatter.addLine(code, childNode.translator().go(childNode));
             }
+            formatter.addDec(code);
             return this;
         }
     }

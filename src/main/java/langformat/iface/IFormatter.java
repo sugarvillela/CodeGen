@@ -1,5 +1,7 @@
 package langformat.iface;
 
+import static langformat.enu.CONTROL_ENTITIES.*;
+
 public interface IFormatter {
     default String trimBack(String text) {
         int len = text.length();
@@ -16,7 +18,15 @@ public interface IFormatter {
     }
 
     default void addBlank(StringBuilder code){
-        code.append('\n');
+        code.append(BLANK_.entity());
+    }
+
+    default void addInc(StringBuilder code){
+        code.append(INC_.entity());
+    }
+
+    default void addDec(StringBuilder code){
+        code.append(DEC_.entity());
     }
 
     default void addLine(StringBuilder code, String text){

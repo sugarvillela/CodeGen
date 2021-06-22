@@ -6,8 +6,7 @@ public enum CONTROL_ENTITIES {
     BLANK_
     ;
 
-    @Override
-    public String toString() {
-        return "<_" + super.toString() + "_>";
+    public String entity() {
+        return "<_" + super.toString() + ">";
     }
 }

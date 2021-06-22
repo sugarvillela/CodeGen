@@ -70,9 +70,11 @@ public class Tokenizer implements ITokenizer {
             }
         }
     }
+
     private boolean isEscape(char symbol){
         return symbol == escape;
     }
+
     private boolean isDelimiter(char symb){
         return delimiters.indexOf(symb) != -1 || whitespace.isWhitespace(symb);
     }
