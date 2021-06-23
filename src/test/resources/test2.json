@@ -1,102 +1,537 @@
 {
-  "children": [
-    {
+  "children": [{
+    "children": [{
       "children": [
         {
-          "children": [{
-            "children": [],
-            "attributes": {
-              "EXTENDS": [],
-              "VISIBILITY": ["PUBLIC"],
-              "FINAL": ["FALSE"],
-              "IMPLEMENTS": [],
-              "CODE_NODE_TYPE": ["CLASS"],
-              "ABSTRACT": ["FALSE"],
-              "STATIC": ["FALSE"],
-              "NAME": ["class1"]
+          "children": [
+            {
+              "children": [],
+              "attributes": {
+                "CODE_NODE_TYPE": ["IMPORT_ITEM"],
+                "LIT_VAL": ["someDir1.someFile1"],
+                "IS_HEADER": ["FALSE"],
+                "NAME": ["IMPORT_ITEM"]
+              }
+            },
+            {
+              "children": [],
+              "attributes": {
+                "CODE_NODE_TYPE": ["IMPORT_ITEM"],
+                "LIT_VAL": ["someDir2.someFile2"],
+                "IS_HEADER": ["FALSE"],
+                "NAME": ["IMPORT_ITEM"]
+              }
             }
-          }],
+          ],
           "attributes": {
-            "PATH": ["glob.package1.file1"],
-            "CODE_NODE_TYPE": ["FILE"],
-            "NAME": ["file1"]
+            "NAME": ["IMPORT"],
+            "CODE_NODE_TYPE": ["IMPORT"],
+            "IS_HEADER": ["TRUE"]
           }
         },
         {
-          "children": [{
-            "children": [],
-            "attributes": {
-              "EXTENDS": [],
-              "VISIBILITY": ["PUBLIC"],
-              "FINAL": ["FALSE"],
-              "IMPLEMENTS": [],
-              "CODE_NODE_TYPE": ["CLASS"],
-              "ABSTRACT": ["FALSE"],
-              "STATIC": ["FALSE"],
-              "NAME": ["class2"]
+          "children": [
+            {
+              "children": [],
+              "attributes": {
+                "CODE_NODE_TYPE": ["COMMENT_LONG"],
+                "LIT_VAL": ["This here is a long string comment, which will be split across two or more lines, assuming its length exceeds the the allowed characters in a comment line which is somewhat less than a regular line"],
+                "IS_HEADER": ["FALSE"],
+                "NAME": ["COMMENT_LONG"]
+              }
+            },
+            {
+              "children": [],
+              "attributes": {
+                "COLLECTION": ["SCALAR"],
+                "VISIBILITY": ["PUBLIC"],
+                "VAR_VALUE": ["\"comprende\""],
+                "FINAL": ["FALSE"],
+                "CODE_NODE_TYPE": ["CLASS_FIELD"],
+                "DATA_TYPE": ["STRING"],
+                "STATIC": ["FALSE"],
+                "IS_HEADER": ["FALSE"],
+                "NAME": ["classField1"]
+              }
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "attributes": {
+                        "COLLECTION": ["SCALAR"],
+                        "CODE_NODE_TYPE": ["METHOD_ARG"],
+                        "DATA_TYPE": ["INT"],
+                        "VAR_VALUE": ["0"],
+                        "IS_HEADER": ["FALSE"],
+                        "NAME": ["arg1"]
+                      }
+                    },
+                    {
+                      "children": [],
+                      "attributes": {
+                        "COLLECTION": ["SCALAR"],
+                        "CODE_NODE_TYPE": ["METHOD_ARG"],
+                        "DATA_TYPE": ["STRING"],
+                        "IS_HEADER": ["FALSE"],
+                        "NAME": ["arg2"]
+                      }
+                    },
+                    {
+                      "children": [],
+                      "attributes": {
+                        "COLLECTION": ["SCALAR"],
+                        "CODE_NODE_TYPE": ["METHOD_ARG"],
+                        "DATA_TYPE": ["BOOLEAN"],
+                        "VAR_VALUE": ["FALSE"],
+                        "IS_HEADER": ["FALSE"],
+                        "NAME": ["arg3"]
+                      }
+                    }
+                  ],
+                  "attributes": {
+                    "QUANTIFIER": ["ZERO"],
+                    "CODE_NODE_TYPE": ["METHOD_ARGS"],
+                    "IS_HEADER": ["TRUE"],
+                    "NAME": ["METHOD_ARGS"]
+                  }
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "attributes": {
+                        "CODE_NODE_TYPE": ["COMMENT"],
+                        "LIT_VAL": ["This here is a short string comment, which will also be split across two or more lines, assuming its length exceeds the the allowed characters in a comment line"],
+                        "IS_HEADER": ["FALSE"],
+                        "NAME": ["COMMENT"]
+                      }
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg3"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["ASSIGN"],
+                                    "LIT_VAL": ["="],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["ASSIGN"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["false"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "NAME": ["STATEMENT"],
+                                "CODE_NODE_TYPE": ["STATEMENT"],
+                                "IS_HEADER": ["FALSE"]
+                              }
+                            },
+                            {
+                              "children": [],
+                              "attributes": {
+                                "CODE_NODE_TYPE": ["BREAK"],
+                                "LIT_VAL": ["break;"],
+                                "IS_HEADER": ["FALSE"],
+                                "NAME": ["BREAK"]
+                              }
+                            }
+                          ],
+                          "attributes": {
+                            "CODE_NODE_TYPE": ["SWITCH_CASE"],
+                            "LIT_VAL": ["true"],
+                            "IS_HEADER": ["FALSE"],
+                            "NAME": ["SWITCH_CASE"]
+                          }
+                        },
+                        {
+                          "children": [],
+                          "attributes": {
+                            "CODE_NODE_TYPE": ["SWITCH_CASE"],
+                            "LIT_VAL": ["null"],
+                            "IS_HEADER": ["FALSE"],
+                            "NAME": ["SWITCH_CASE"]
+                          }
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg3"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["ASSIGN"],
+                                    "LIT_VAL": ["="],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["ASSIGN"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["true"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "NAME": ["STATEMENT"],
+                                "CODE_NODE_TYPE": ["STATEMENT"],
+                                "IS_HEADER": ["FALSE"]
+                              }
+                            },
+                            {
+                              "children": [],
+                              "attributes": {
+                                "CODE_NODE_TYPE": ["BREAK"],
+                                "LIT_VAL": ["break;"],
+                                "IS_HEADER": ["FALSE"],
+                                "NAME": ["BREAK"]
+                              }
+                            }
+                          ],
+                          "attributes": {
+                            "CODE_NODE_TYPE": ["SWITCH_CASE"],
+                            "LIT_VAL": ["false"],
+                            "IS_HEADER": ["FALSE"],
+                            "NAME": ["SWITCH_CASE"]
+                          }
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg3"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["ASSIGN"],
+                                    "LIT_VAL": ["="],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["ASSIGN"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["true"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "NAME": ["STATEMENT"],
+                                "CODE_NODE_TYPE": ["STATEMENT"],
+                                "IS_HEADER": ["FALSE"]
+                              }
+                            },
+                            {
+                              "children": [],
+                              "attributes": {
+                                "CODE_NODE_TYPE": ["BREAK"],
+                                "LIT_VAL": ["break;"],
+                                "IS_HEADER": ["FALSE"],
+                                "NAME": ["BREAK"]
+                              }
+                            }
+                          ],
+                          "attributes": {
+                            "NAME": ["SWITCH_DEFAULT"],
+                            "CODE_NODE_TYPE": ["SWITCH_DEFAULT"],
+                            "IS_HEADER": ["FALSE"]
+                          }
+                        }
+                      ],
+                      "attributes": {
+                        "CODE_NODE_TYPE": ["SWITCH"],
+                        "LIT_VAL": ["arg3"],
+                        "IS_HEADER": ["FALSE"],
+                        "NAME": ["SWITCH"]
+                      }
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg1"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "COMPARISON_TYPE": ["LTE"],
+                                    "CODE_NODE_TYPE": ["COMPARISON"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["COMPARISON"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["48"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "NAME": ["BOOL_BLOCK"],
+                                "CODE_NODE_TYPE": ["BOOL_BLOCK"],
+                                "IS_HEADER": ["FALSE"]
+                              }
+                            },
+                            {
+                              "children": [],
+                              "attributes": {
+                                "CONJUNCTION_TYPE": ["OR"],
+                                "CODE_NODE_TYPE": ["CONJUNCTION"],
+                                "IS_HEADER": ["FALSE"],
+                                "NAME": ["CONJUNCTION"]
+                              }
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg2"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "COMPARISON_TYPE": ["EQ"],
+                                    "CODE_NODE_TYPE": ["COMPARISON"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["COMPARISON"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["17"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "CODE_NODE_TYPE": ["BOOL_BLOCK"],
+                                "NEGATE": ["TRUE"],
+                                "IS_HEADER": ["FALSE"],
+                                "NAME": ["BOOL_BLOCK"]
+                              }
+                            }
+                          ],
+                          "attributes": {
+                            "NAME": ["CONDITIONAL"],
+                            "CODE_NODE_TYPE": ["CONDITIONAL"],
+                            "IS_HEADER": ["TRUE"]
+                          }
+                        },
+                        {
+                          "children": [{
+                            "children": [
+                              {
+                                "children": [],
+                                "attributes": {
+                                  "CODE_NODE_TYPE": ["LIT"],
+                                  "LIT_VAL": ["classField1"],
+                                  "IS_HEADER": ["FALSE"],
+                                  "NAME": ["LIT"]
+                                }
+                              },
+                              {
+                                "children": [],
+                                "attributes": {
+                                  "CODE_NODE_TYPE": ["ASSIGN"],
+                                  "LIT_VAL": ["="],
+                                  "IS_HEADER": ["FALSE"],
+                                  "NAME": ["ASSIGN"]
+                                }
+                              },
+                              {
+                                "children": [],
+                                "attributes": {
+                                  "CODE_NODE_TYPE": ["LIT"],
+                                  "LIT_VAL": ["\"no comprende\""],
+                                  "IS_HEADER": ["FALSE"],
+                                  "NAME": ["LIT"]
+                                }
+                              }
+                            ],
+                            "attributes": {
+                              "NAME": ["STATEMENT"],
+                              "CODE_NODE_TYPE": ["STATEMENT"],
+                              "IS_HEADER": ["FALSE"]
+                            }
+                          }],
+                          "attributes": {
+                            "NAME": ["CODE_BLOCK"],
+                            "CODE_NODE_TYPE": ["CODE_BLOCK"],
+                            "IS_HEADER": ["FALSE"]
+                          }
+                        },
+                        {
+                          "children": [{
+                            "children": [{
+                              "children": [
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["arg1"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["ASSIGN"],
+                                    "LIT_VAL": ["="],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["ASSIGN"]
+                                  }
+                                },
+                                {
+                                  "children": [],
+                                  "attributes": {
+                                    "CODE_NODE_TYPE": ["LIT"],
+                                    "LIT_VAL": ["69"],
+                                    "IS_HEADER": ["FALSE"],
+                                    "NAME": ["LIT"]
+                                  }
+                                }
+                              ],
+                              "attributes": {
+                                "NAME": ["STATEMENT"],
+                                "CODE_NODE_TYPE": ["STATEMENT"],
+                                "IS_HEADER": ["FALSE"]
+                              }
+                            }],
+                            "attributes": {
+                              "NAME": ["CODE_BLOCK"],
+                              "CODE_NODE_TYPE": ["CODE_BLOCK"],
+                              "IS_HEADER": ["FALSE"]
+                            }
+                          }],
+                          "attributes": {
+                            "NAME": ["ELSE"],
+                            "CODE_NODE_TYPE": ["ELSE"],
+                            "IS_HEADER": ["FALSE"]
+                          }
+                        }
+                      ],
+                      "attributes": {
+                        "NAME": ["IF_ELSE"],
+                        "CODE_NODE_TYPE": ["IF_ELSE"],
+                        "IS_HEADER": ["FALSE"]
+                      }
+                    }
+                  ],
+                  "attributes": {
+                    "NAME": ["CODE_BLOCK"],
+                    "CODE_NODE_TYPE": ["CODE_BLOCK"],
+                    "IS_HEADER": ["FALSE"]
+                  }
+                }
+              ],
+              "attributes": {
+                "OVERRIDE": ["FALSE"],
+                "VISIBILITY": ["PUBLIC"],
+                "FINAL": ["FALSE"],
+                "CODE_NODE_TYPE": ["METHOD"],
+                "ABSTRACT": ["FALSE"],
+                "DATA_TYPE": ["VOID"],
+                "STATIC": ["FALSE"],
+                "IS_HEADER": ["FALSE"],
+                "NAME": ["method1"]
+              }
             }
-          }],
+          ],
           "attributes": {
-            "PATH": ["glob.package1.file2"],
-            "CODE_NODE_TYPE": ["FILE"],
-            "NAME": ["file2"]
+            "EXTENDS": [],
+            "VISIBILITY": ["PUBLIC"],
+            "FINAL": ["FALSE"],
+            "IMPLEMENTS": [],
+            "CODE_NODE_TYPE": ["CLASS"],
+            "ABSTRACT": ["FALSE"],
+            "STATIC": ["FALSE"],
+            "IS_HEADER": ["FALSE"],
+            "NAME": ["class1"]
           }
         }
       ],
       "attributes": {
-        "CODE_NODE_TYPE": ["PACKAGE"],
-        "NAME": ["package1"]
+        "PATH": ["package1"],
+        "CODE_NODE_TYPE": ["FILE"],
+        "IS_HEADER": ["FALSE"],
+        "NAME": ["class1"]
       }
-    },
-    {
-      "children": [
-        {
-          "children": [{
-            "children": [],
-            "attributes": {
-              "EXTENDS": [],
-              "VISIBILITY": ["PUBLIC"],
-              "FINAL": ["FALSE"],
-              "IMPLEMENTS": [],
-              "CODE_NODE_TYPE": ["CLASS"],
-              "ABSTRACT": ["FALSE"],
-              "STATIC": ["FALSE"],
-              "NAME": ["class3"]
-            }
-          }],
-          "attributes": {
-            "PATH": ["glob.package2.file3"],
-            "CODE_NODE_TYPE": ["FILE"],
-            "NAME": ["file3"]
-          }
-        },
-        {
-          "children": [{
-            "children": [],
-            "attributes": {
-              "EXTENDS": [],
-              "VISIBILITY": ["PUBLIC"],
-              "FINAL": ["FALSE"],
-              "IMPLEMENTS": [],
-              "CODE_NODE_TYPE": ["CLASS"],
-              "ABSTRACT": ["FALSE"],
-              "STATIC": ["FALSE"],
-              "NAME": ["class4"]
-            }
-          }],
-          "attributes": {
-            "PATH": ["glob.package2.file4"],
-            "CODE_NODE_TYPE": ["FILE"],
-            "NAME": ["file4"]
-          }
-        }
-      ],
-      "attributes": {
-        "CODE_NODE_TYPE": ["PACKAGE"],
-        "NAME": ["package2"]
-      }
+    }],
+    "attributes": {
+      "NAME": ["package1"],
+      "CODE_NODE_TYPE": ["PACKAGE"],
+      "IS_HEADER": ["FALSE"]
     }
-  ],
+  }],
   "attributes": {
     "FORMAT_INDENT": ["4"],
     "CODE_NODE_TYPE": ["GLOB"],

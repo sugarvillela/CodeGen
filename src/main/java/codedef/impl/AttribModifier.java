@@ -1,12 +1,12 @@
 package codedef.impl;
 
+import codejson.iface.IErrCatch;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 import codedef.iface.IAttribModifier;
 import codedef.modifier.*;
-import tuple.TupPair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -145,18 +145,6 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     @Override
-    public List<TupPair<MODIFIER, String[]>> toList() {
-        List<TupPair<MODIFIER, String[]>> out = new ArrayList<>(attributes.size());
-        Iterator<Map.Entry<MODIFIER, String[]>> itr = attributes.entrySet().iterator();
-
-        while(itr.hasNext()) {
-            Map.Entry<MODIFIER, String[]> entry = itr.next();
-            out.add(new TupPair<>(entry.getKey(), entry.getValue()));
-        }
-        return out;
-    }
-
-    @Override
     public IAttribModifier prototype() {
         return new AttribModifier(
                 codeNodeEnum,
@@ -231,8 +219,8 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     @Override
-    public void fromJson(JSONObject attribObject) {
-        contentFromJson.mergeJsonData(this, attribObject);
+    public void fromJson(JSONObject attrObj, IErrCatch errCatch) {
+        contentFromJson.readIn(this, attrObj, errCatch);
     }
 
     @Override
@@ -247,18 +235,19 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     private static class ModifierContentFromJson {
-        public void mergeJsonData(IAttribModifier attribModifier, JSONObject attribObject) {
-            Iterator<?> keys = attribObject.keySet().iterator();
+        public void readIn(IAttribModifier attribModifier, JSONObject attrObj, IErrCatch errCatch) {
+            Iterator<?> keys = attrObj.keySet().iterator();
             while (keys.hasNext()) {
                 String key = (String) keys.next();
-                MODIFIER modifier = Glob.UTIL_JSON.getModifierEnu(attribObject, key);
 
-                JSONArray jArr = Glob.UTIL_JSON.getJArr(attribObject, key);
+                MODIFIER modifier = errCatch.toModifierEnum(key);
+
+                JSONArray jArr = errCatch.toJArr(attrObj, key);
                 if(jArr.isEmpty()){
                     attribModifier.clear(modifier);
                 }
                 else{
-                    attribModifier.put(modifier, Glob.UTIL_JSON.jArrToStringArr(jArr));
+                    attribModifier.put(modifier, errCatch.toArray(jArr));
                 }
             }
         }

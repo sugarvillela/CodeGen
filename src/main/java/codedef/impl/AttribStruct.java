@@ -1,5 +1,6 @@
 package codedef.impl;
 
+import codejson.iface.IErrCatch;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import codedef.iface.IAttribStruct;
@@ -86,7 +87,7 @@ public class AttribStruct implements IAttribStruct {
     }
 
     @Override
-    public void fromJson(JSONObject jsonObject) {
+    public void fromJson(JSONObject jsonObject, IErrCatch errCatch) {
 
     }
 

@@ -52,8 +52,8 @@ public enum ENU_DATA_TYPE {
     }
     private static class StringTypeUtil implements IDataTypeUtil{
         @Override
-        public ERR_TYPE assertValidDataItem(String data) {
-            return (data == null || data.isEmpty() || "TRUE".equals(data) || "FALSE".equals(data))?
+        public ERR_TYPE assertValidDataItem(String data) {// || data.isEmpty() || "TRUE".equals(data) || "FALSE".equals(data)
+            return (data == null)?
                     ERR_TYPE.INVALID_STRING : ERR_TYPE.NONE;
         }
 

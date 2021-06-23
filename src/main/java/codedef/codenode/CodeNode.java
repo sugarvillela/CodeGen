@@ -6,6 +6,7 @@ import codedef.iface.ICodeNode;
 import codedef.impl.AttribModifier;
 import codedef.impl.AttribStruct;
 import codedef.modifier.*;
+import codejson.iface.IErrCatch;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -149,7 +150,7 @@ public class CodeNode implements ICodeNode {
     }
 
     @Override
-    public void fromJson(JSONObject jsonObject) {}
+    public void fromJson(JSONObject jsonObject, IErrCatch errCatch) {}
 
     @Override
     public JSONObject toJson() {

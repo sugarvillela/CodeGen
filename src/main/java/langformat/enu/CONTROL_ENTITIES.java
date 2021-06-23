@@ -1,12 +1,13 @@
 package langformat.enu;
 
 public enum CONTROL_ENTITIES {
-    INC_,
-    DEC_,
-    BLANK_
+    I_, // increment
+    D_, // decrement
+    N_, // new line
+    B_  // blank line
     ;
 
     public String entity() {
-        return "<_" + super.toString() + ">";
+        return "[" + super.toString().charAt(0) + ']';
     }
 }

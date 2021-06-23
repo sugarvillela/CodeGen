@@ -1,54 +1,56 @@
-package tokenizer.impl;
+package tokenizer.simpl;
 
-import tokenizer.iface.ITokenizer;
-import tokenizer.iface.IWhitespace;
+import tokenizer.util_iface.IWhitespaceTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**A simple string tokenizer.
  * Supports single delimiter
  * Ignores adjacent delimiters to prevent empty elements
+ * Obeys escape symbol, leaves escape symbol in string
  * Option to limit number of splits */
-public class SimpleTok implements ITokenizer {
+public class CharTokSimple {
     private static final char escape = '\\';
-    private IWhitespace whitespace;
+    private IWhitespaceTest whitespace;
     private final int limit;
     private String text;
     private char delimiter;
     private String[] tokens;
 
-    public SimpleTok(){
+    public CharTokSimple(){
         this( ' ', 0x7FFFFFFF );
     }
-    public SimpleTok(char delimiter ){
+
+    public CharTokSimple(char delimiter ){
         this( delimiter, 0x7FFFFFFF );
     }
-    public SimpleTok(char delimiter, int limit ){
+
+    public CharTokSimple(char delimiter, int limit ){
         this.setDelimiter(delimiter);
         this.limit = limit;
     }
 
-    @Override
-    public ITokenizer setText(String text) {
+    public CharTokSimple setText(String text) {
         this.text = text;
         return this;
     }
 
-    @Override
-    public ITokenizer setDelimiter(char... delimiter) {
+    public CharTokSimple setDelimiter(char... delimiter) {
         this.delimiter = (delimiter.length == 0)? '\0' : delimiter[0];
         if(this.delimiter == ' '){
-            whitespace = new IWhitespace() {
-                @Override
-                public boolean isWhitespace(char symbol) {
+            whitespace = new IWhitespaceTest() {
+                
+                public boolean eq(char symbol) {
                     return ((int)symbol) < 33;
                 }
             };
         }
         else{
-            whitespace = new IWhitespace() {
-                @Override
-                public boolean isWhitespace(char symbol) {
+            whitespace = new IWhitespaceTest() {
+                
+                public boolean eq(char symbol) {
                     return false;
                 }
             };
@@ -60,11 +62,10 @@ public class SimpleTok implements ITokenizer {
         return symbol == escape;
     }
     private boolean isDelimiter(char symbol){
-        return symbol == delimiter || whitespace.isWhitespace(symbol);
+        return symbol == delimiter || whitespace.eq(symbol);
     }
-
-    @Override
-    public ITokenizer parse() {
+    
+    public CharTokSimple parse() {
         // Rehearse to get size
         int count = 0, len = text.length();
         boolean escaped = false;
@@ -124,22 +125,11 @@ public class SimpleTok implements ITokenizer {
         return this;
     }
 
-    @Override
-    public ArrayList<String> toList() {
-        ArrayList<String> out = new ArrayList<>(tokens.length);
-        for(String tok: tokens) {
-            out.add(tok);
-        }
-        return out;
+    public List<String> toList() {
+        return new ArrayList<>(Arrays.asList(tokens));
     }
 
-    @Override
     public String[] toArray() {
         return tokens;
-    }
-
-    @Override
-    public int[] indents() {
-        throw new IllegalStateException("SimpleTok does not implement indents()");
     }
 }

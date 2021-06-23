@@ -1,7 +1,6 @@
 package utilfile;
 
 import codedef.iface.ICodeNode;
-import codejson.JsonToCodeTree;
 import generictree.iface.IGTreeNode;
 import generictree.iface.IGTreeParse;
 import generictree.iface.IGTreeTask;

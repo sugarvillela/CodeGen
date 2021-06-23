@@ -3,7 +3,6 @@ package codedef.iface;
 import iface_global.ICsv;
 import codedef.modifier.MODIFIER;
 import iface_global.ISerializableJson;
-import tuple.TupPair;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ public interface IAttribModifier extends ICsv, ISerializableJson {
     void put(MODIFIER modifier, String... values);
     void clear(MODIFIER modifier);
     String[] get(MODIFIER modifier);
-    List<TupPair<MODIFIER, String[]>> toList();
 
     IAttribModifier prototype();
 

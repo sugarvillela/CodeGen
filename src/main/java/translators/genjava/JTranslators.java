@@ -121,8 +121,7 @@ public class JTranslators implements ITranslatorFactory {
         @Override
         public ITranslator body() {
             for(ICodeNode childNode : bodyChildren){
-                String text = childNode.translator().go(childNode);
-                code.append(text);
+                this.append(childNode.translator().go(childNode));
             }
             return this;
         }
@@ -148,6 +147,11 @@ public class JTranslators implements ITranslatorFactory {
                 }
             }
 
+        }
+        protected void append(String text){
+            if(!text.isEmpty()){
+                code.append(text);
+            }
         }
     }
 
@@ -177,7 +181,7 @@ public class JTranslators implements ITranslatorFactory {
                 formatter.addStatement(code, "package " + value);
             }
             for(ICodeNode childNode : headerChildren){// import
-                code.append(childNode.translator().go(childNode));
+                this.append(childNode.translator().go(childNode));
             }
             return this;
         }
@@ -187,7 +191,7 @@ public class JTranslators implements ITranslatorFactory {
         @Override
         public ITranslator body(){
             for(ICodeNode childNode : bodyChildren){// importItem
-                code.append(childNode.translator().go(childNode));
+                this.append(childNode.translator().go(childNode));
             }
             formatter.addBlank(code);
             return this;
@@ -247,6 +251,7 @@ public class JTranslators implements ITranslatorFactory {
         @Override
         public ITranslator foot() {
             formatter.addLine(code, "}");
+            formatter.addBlank(code);
             return this;
         }
     }
@@ -281,6 +286,11 @@ public class JTranslators implements ITranslatorFactory {
             for(ICodeNode childNode : headerChildren){// method args
                 formatter.addWord_(code, childNode.translator().go(childNode));
             }
+            return this;
+        }
+        @Override
+        public ITranslator foot() {
+            formatter.addBlank(code);
             return this;
         }
     }
@@ -333,13 +343,13 @@ public class JTranslators implements ITranslatorFactory {
     public static class ParBlockJava extends TranslatorBase {
         @Override
         public ITranslator body(){
-            formatter.addWord_(code, "(");
+            formatter.add(code, "(");
             IAccumulator acc = new Accumulator(" ");
             for(ICodeNode childNode : bodyChildren){//conditional, connector
                 acc.add(childNode.translator().go(childNode));
             }
             formatter.addWord_(code, acc.finish());
-            formatter.addWord_(code, ")");
+            formatter.add(code, ")");
             return this;
         }
     }
@@ -349,7 +359,7 @@ public class JTranslators implements ITranslatorFactory {
         public ITranslator head(){
             HashMap<MODIFIER, String[]> attributes = codeNode.getAttribModifier().getAttributes();
             if(nullableUtil.extractBoolean(attributes.get(NEGATE))){
-                formatter.addWord(code, "!");
+                formatter.add(code, "!");
             }
             return this;
         }
@@ -385,7 +395,7 @@ public class JTranslators implements ITranslatorFactory {
             HashMap<MODIFIER, String[]> attributes = codeNode.getAttribModifier().getAttributes();
             String value;
             if((value = nullableUtil.extractString(attributes.get(LIT_VAL))) != null){
-                formatter.addWord_(code, value);
+                formatter.addWord(code, value);
             }
             return this;
         }
@@ -545,28 +555,28 @@ public class JTranslators implements ITranslatorFactory {
 
     public static class SwitchCaseJava extends TranslatorBase {
         @Override
-        public ITranslator body(){
+        public ITranslator head(){
             String value = nullableUtil.extractString(codeNode.getAttribModifier().get(LIT_VAL));
             formatter.addLine(code, "case " + value + ":");
-            formatter.addInc(code);
-
-            for(ICodeNode childNode : bodyChildren){
-                formatter.addLine(code, childNode.translator().go(childNode));
+            return this;
+        }
+        @Override
+        public ITranslator body(){
+            if(!bodyChildren.isEmpty()){
+                formatter.addInc(code);
+                for(ICodeNode childNode : bodyChildren){
+                    formatter.add(code, childNode.translator().go(childNode));
+                }
+                formatter.addDec(code);
             }
-            formatter.addDec(code);
             return this;
         }
     }
 
-    public static class SwitchCaseDefaultJava extends TranslatorBase {
+    public static class SwitchCaseDefaultJava extends SwitchCaseJava {
         @Override
-        public ITranslator body(){
-            String value = nullableUtil.extractString(codeNode.getAttribModifier().get(LIT_VAL));
+        public ITranslator head(){
             formatter.addLine(code, "default:");
-
-            for(ICodeNode childNode : bodyChildren){
-                formatter.addLine(code, childNode.translator().go(childNode));
-            }
             return this;
         }
     }

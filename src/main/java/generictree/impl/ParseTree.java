@@ -5,8 +5,8 @@ import generictree.iface.IGTreeTask;
 import generictree.task.TaskNegate;
 import generictree.task.TaskUnwrap;
 import generictree.node.ParseTreeNode;
-import tokenizer.iface.ITokenizer;
-import tokenizer.impl.Tokenizer;
+import tokenizer.composite.CharTok;
+import tokenizer.iface.IStringParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,12 @@ import java.util.List;
  * @param <T> the IGTreeNode payload type
  */
 public class ParseTree<T> extends GTreeBase <T> {
-    private static final char AND = '&';
-    private static final char OR = '|';
+    private static final String AND = "&";
+    private static final String OR = "|";
     private static final char NEGATE_SYMBOL = '!';
     private static final char WRAP_SYMBOL_OPEN = '(';
     private static final char WRAP_SYMBOL_CLOSE = ')';
-    private final ITokenizer tokenizer;
+    private final IStringParser tokenizer;
 
     private final IGTreeTask<T> taskNegate;
     private final IGTreeTask<T> taskUnwrap;
@@ -30,7 +30,7 @@ public class ParseTree<T> extends GTreeBase <T> {
     public ParseTree() {
         taskNegate = new TaskNegate<>(NEGATE_SYMBOL);
         taskUnwrap = new TaskUnwrap<>(WRAP_SYMBOL_OPEN, WRAP_SYMBOL_CLOSE);
-        tokenizer = Tokenizer.builder().skipSymbols(WRAP_SYMBOL_OPEN +"'").keepSkipSymbol().build();
+        tokenizer = new CharTok().setStartPos(10).setDelimiter(" ").setSkipSymbols(WRAP_SYMBOL_OPEN +"'");
     }
 
     @Override
@@ -43,10 +43,10 @@ public class ParseTree<T> extends GTreeBase <T> {
         boolean more;
         do{
             tokenizer.setDelimiter(AND);
-            more = this.split(root, AND);
+            more = this.split(root, AND.charAt(0));
 
             tokenizer.setDelimiter(OR);
-            more |= this.split(root, OR);
+            more |= this.split(root, OR.charAt(0));
 
             more |= parseObject.preOrder(root, taskNegate);
             more |= parseObject.preOrder(root, taskUnwrap);

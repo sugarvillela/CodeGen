@@ -26,11 +26,11 @@ class GenJavaTest {
     }
     @Test
     void givenPopulatedTree(){
-        CodeNodeTree pathTree = mockSource.getPopulatedTree3();
-        pathTree.display();
-        ICodeNode codeNode = pathTree.getRoot().getPayload();
-        String actual = codeNode.translator().format(codeNode);
-        System.out.println(actual);
+//        CodeNodeTree pathTree = mockSource.getPopulatedTree3();
+//        pathTree.display();
+//        ICodeNode codeNode = pathTree.getRoot().getPayload();
+//        String actual = codeNode.translator().format(codeNode);
+//        System.out.println(actual);
     }
     @Test
     void givenPopulatedTreeFromFile(){
@@ -47,10 +47,10 @@ class GenJavaTest {
     }
     @Test
     void givenPopulatedTree_display() {
-        CodeNodeTree pathTree = mockSource.getSmallTree();
-        pathTree.display();
-        ICodeNode rootPayload = pathTree.getRoot().getPayload();
-
-        System.out.println("\npaths");
+//        CodeNodeTree pathTree = mockSource.getSmallTree();
+//        pathTree.display();
+//        ICodeNode rootPayload = pathTree.getRoot().getPayload();
+//
+//        System.out.println("\npaths");
     }
 }

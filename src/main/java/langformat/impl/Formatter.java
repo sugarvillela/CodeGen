@@ -2,10 +2,11 @@ package langformat.impl;
 
 import langformat.iface.IFormatStrategy;
 import langformat.iface.IFormatter;
-import tokenizer.iface.IMatchUtil;
-import tokenizer.iface.ISplitUtil;
-import tokenizer.iface.ITokenizer;
-import tokenizer.impl.MatchUtil;
+import tokenizer.composite.WordReplace;
+import tokenizer.composite.WordTok;
+import tokenizer.composite2.CharSplit;
+import tokenizer.composite2.SpaceUtil;
+import tokenizer.iface.IStringParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,65 +23,89 @@ public class Formatter implements IFormatter {
         return instance;
     }
 
-    private final ITokenizer tokenizer;
     private final IFormatStrategy formatStrategy;
-    private final IMatchUtil matchUtil;
-    private final ISplitUtil splitUtil;
+    private final IStringParser tokenizer;
+    private final IStringParser endLineReplace;
+    private final IStringParser entityRemove;
+    private final IStringParser splitUtil;
+    private final IStringParser spaceUtil;
     protected int indent, tab, margin;
 
     private Formatter(IFormatStrategy formatStrategy){
         this.margin = 70;
         this.tab = 4;
         indent = 0;
-
         this.formatStrategy = formatStrategy;
-        tokenizer = formatStrategy.getTokenizer();
-        splitUtil = formatStrategy.getSplitUtil(margin);
-        matchUtil = new MatchUtil();
+        tokenizer = new WordTok().setDelimiter(N_.entity());
+        endLineReplace = new WordReplace("\n");
+        entityRemove = new WordReplace("");
+        splitUtil = new CharSplit().setDelimiter(" ").setSkipSymbols("'\"").setStartPos(margin);
+        spaceUtil = new SpaceUtil().setSkipSymbols(splitUtil.getSymbolPairs());
     }
 
     @Override
     public String formatAll(String text) {
         List<String> tok = tokenizer.setText(text).parse().toList();
         List<String> content = new ArrayList<>();
+
         for(String haystack : tok){
-            matchUtil.setHaystack(haystack);
-
             // add blank lines if Control Entity
-            if(matchUtil.setNeedle(BLANK_.entity()).parse().numOccurs() != 0){
-                haystack = matchUtil.replaceAll("\n").getHaystack();
+            if(endLineReplace.setText(haystack).setDelimiter(B_.entity()).parse().numeric() != 0){
+                haystack = endLineReplace.getText();
             }
 
-            // inc tab if Control Entity
-            int incByControlEntity = matchUtil.setNeedle(INC_.entity()).parse().numOccurs();
-            if(incByControlEntity != 0){
-                haystack = matchUtil.removeAll().getHaystack();
-            }
-
-            // dec tab if Control Entity
-            int decByControlEntity = matchUtil.setNeedle(DEC_.entity()).parse().numOccurs();
-            if(decByControlEntity != 0){
-                haystack = matchUtil.removeAll().getHaystack();
-            }
-
-            // inc/dec tab if language-specific triggers
-            int incDecByStrategy = formatStrategy.checkLine(haystack);
-
-            // sum inc/dec commands and execute tab in correct order
-            int incBy = incByControlEntity - decByControlEntity + incDecByStrategy;
-            if(incBy > 0){
-                this.formatLine(content, haystack);
-                this.inc(incBy);
-            }
-            else if(incBy < 0){
-                this.inc(incBy);
-                this.formatLine(content, haystack);
-            }
-            else{
+            if(!incByControlEntity(content, haystack) && !incByStrategy(content, haystack)){
                 this.formatLine(content, haystack);
             }
         }
         return String.join("\n", content);
+    }
+    private boolean incByControlEntity(List<String> content, String haystack){
+        // inc tab if Control Entity
+        int origLen = haystack.length();
+        int incBy = entityRemove.setText(haystack).setDelimiter(I_.entity()).parse().numeric();
+        if(incBy != 0){
+            haystack = entityRemove.getText();
+        }
+
+        // dec tab if Control Entity
+        int decBy = entityRemove.setText(haystack).setDelimiter(D_.entity()).parse().numeric();
+        if(decBy != 0){
+            haystack = entityRemove.getText();
+        }
+
+        int incDec = incBy - decBy;
+
+        if(incDec > 0){         // contains inc entity
+            this.inc(incDec);
+            this.formatLine(content, haystack);
+            return true;
+        }
+        else if(incDec < 0){    // contains dec entity
+            this.formatLine(content, haystack);
+            this.inc(incDec);
+            return true;
+        }
+        else if(haystack.length() != origLen){  // special case: inc, dec and no text: remove entities
+            this.formatLine(content, haystack);
+            return true;
+        }
+        return false;
+    }
+    private boolean incByStrategy(List<String> content, String haystack){
+        // inc/dec tab if language-specific triggers
+        int incBy = formatStrategy.checkLine(haystack);
+        if(incBy > 0){
+            this.formatLine(content, haystack);
+            this.inc(incBy);
+            return true;
+        }
+        else if(incBy < 0){
+            this.inc(incBy);
+            this.formatLine(content, haystack);
+            return true;
+        }
+        return false;
     }
 
     private void inc(int incBy){
@@ -95,9 +120,9 @@ public class Formatter implements IFormatter {
         if(text == null){
             return;
         }
-
+        text = spaceUtil.setText(text).parse().getText();
         text = tab(text);
-        String[] pair = splitUtil.split(text);
+        String[] pair = splitUtil.setText(text).parse().toArray();
         content.add(pair[0]);
 
         if(pair[1] == null){
@@ -107,7 +132,7 @@ public class Formatter implements IFormatter {
         indent++;
         while(pair[1] != null){
             text = tab(pair[1]);
-            pair = splitUtil.split(text);
+            pair = splitUtil.setText(text).parse().toArray();
             content.add(pair[0]);
         };
         indent--;
@@ -119,7 +144,7 @@ public class Formatter implements IFormatter {
         splitUtil.setStartPos((int)(margin*0.6));
         while(text != null){
             text = tab(commentSymbol + ' ' + text);
-            pair = splitUtil.split(text);
+            pair = splitUtil.setText(text).parse().toArray();
             addLine(code, pair[0]);
             text = pair[1];
         }
@@ -133,7 +158,7 @@ public class Formatter implements IFormatter {
         addLine(code, tab(before));
         while(text != null){
             text = tab(during + ' ' + text);
-            pair = splitUtil.split(text);
+            pair = splitUtil.setText(text).parse().toArray();
             addLine(code, pair[0]);
             text = pair[1];
         }
