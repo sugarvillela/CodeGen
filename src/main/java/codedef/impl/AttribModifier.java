@@ -1,6 +1,6 @@
 package codedef.impl;
 
-import codejson.iface.IErrCatch;
+import iface_global.IErrCatch;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;

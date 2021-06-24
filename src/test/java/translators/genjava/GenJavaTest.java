@@ -1,7 +1,6 @@
 package translators.genjava;
 
 import codedef.iface.ICodeNode;
-import generictree.impl.CodeNodeTree;
 import mock.MockSource;
 import org.junit.jupiter.api.Test;
 import runstate.Glob;
@@ -34,7 +33,7 @@ class GenJavaTest {
     }
     @Test
     void givenPopulatedTreeFromFile(){
-        CodeNodeTree tree = mockSource.getPopulatedTreeFromFile("test3.json");
+//        CodeNodeTree tree = mockSource.getPopulatedTreeFromFile("test3.json");
 //        ICodeNode rootPayload = tree.getRoot().getPayload();
 //        System.out.println("rootPayload: " + rootPayload.getClass().getSimpleName());
 //        IFormatUtil formatUtil = new FormatUtil();

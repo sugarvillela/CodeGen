@@ -3,15 +3,12 @@ package codejson.impl;
 import codedef.iface.ICodeNode;
 import codedef.impl.PrototypeFactory;
 import codedef.modifier.CODE_NODE;
-import codejson.iface.IErrCatch;
+import iface_global.IErrCatch;
 import codejson.iface.IJCodeBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 import utilfile.UtilFileJson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static codedef.modifier.MODIFIER.CODE_NODE_TYPE;
 

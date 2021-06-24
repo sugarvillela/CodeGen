@@ -1,6 +1,6 @@
 package codedef.impl;
 
-import codejson.iface.IErrCatch;
+import iface_global.IErrCatch;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import codedef.iface.IAttribStruct;

@@ -7,7 +7,6 @@ import codedef.iface.ICodeNode;
 import codedef.impl.AttribModifier;
 import codedef.impl.AttribStruct;
 import codedef.impl.PrototypeFactory;
-import generictree.impl.CodeNodeTree;
 import runstate.Glob;
 
 import static codedef.modifier.CODE_NODE.*;
@@ -16,7 +15,7 @@ import static codedef.modifier.ENU_VISIBILITY.PUBLIC;
 import static codedef.modifier.MODIFIER.*;
 
 public class MockSource {
-    public CodeNodeTree getPopulatedTreeFromFile(String fileName){
+    public ICodeNode getPopulatedTreeFromFile(String fileName){
 //        String filePath = Glob.FILE_NAME_UTIL.mergeDefaultPath(fileName);
 //        System.out.println("filePath: " + filePath);
 //        pathTree = new JsonToCodeTree().buildTree(filePath).getTree();

@@ -1,4 +1,4 @@
-package codejson.iface;
+package iface_global;
 
 import codedef.modifier.CODE_NODE;
 import codedef.modifier.MODIFIER;
@@ -7,6 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 
+/** A class for accessing org.json Objects, Arrays and Strings, with exceptions
+ * mapped to an alternate error reporting system.
+ *
+ * Expectation for Json encoding:
+ * Numbers, booleans and strings are all encoded as strings, which are further
+ * encoded as single-element String arrays.
+ * Thus, String access involves passing a JSONArray and returning element 0
+ */
 public interface IErrCatch {
     default JSONObject toJObj(Object object){
         try{
@@ -18,6 +26,7 @@ public interface IErrCatch {
         }
         return null;
     }
+
     default JSONObject toJObj(JSONObject parentObj, String key){
         try{
             return parentObj.getJSONObject(key);
@@ -40,22 +49,27 @@ public interface IErrCatch {
 
     // There are no strings, only string arrays
     default String toStr(JSONObject parentObj, String key){
-        return this.toStr(this.toJArr(parentObj, key));
+        return this.toStr(this.toJArr(parentObj, key), 0);
     }
 
     default String toStr(JSONArray jArr){
+        return this.toStr(jArr, 0);
+    }
+
+    default String toStr(JSONArray jArr, int i){
         if(jArr.isEmpty()){
             //System.out.println("getStr: i="+i + ", jArr="+jArr.toString() + " EMPTY!!!");
             return "";
         }
         try{
-            return jArr.getString(0);
+            return jArr.getString(i);
         }
         catch(org.json.JSONException e){
             Glob.ERR.kill(ERR_TYPE.INVALID_STRING, jArr.toString());
         }
         return null;
     }
+
     default String[] toArray(JSONArray jArr){
         int len = jArr.length();
         String[] strArr = new String[len];
@@ -69,10 +83,13 @@ public interface IErrCatch {
         }
         return strArr;
     }
+
     default CODE_NODE toCodeNodeEnum(String enumName){
         return Glob.UTIL_ENUM.fromStringOrKill(CODE_NODE.class, enumName);
     }
+
     default MODIFIER toModifierEnum(String enumName){
         return Glob.UTIL_ENUM.fromStringOrKill(MODIFIER.class, enumName);
     }
 }
+

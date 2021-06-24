@@ -6,7 +6,7 @@ import codedef.iface.ICodeNode;
 import codedef.impl.AttribModifier;
 import codedef.impl.AttribStruct;
 import codedef.modifier.*;
-import codejson.iface.IErrCatch;
+import iface_global.IErrCatch;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
