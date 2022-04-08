@@ -25,7 +25,7 @@ public abstract class BaseTok extends BaseComposite {
 
     /**If adding current token does not reach limit, add it and return true;
      * else add rest of string as single token and return false
-     * @return true unless current add reaches limit */
+     * @return always true unless current add reaches limit */
     protected boolean tryAddToken(String text, int begin, int end){
         if((tokens.size() + 1) >= parser.getLimit()){
             tokens.add(text.substring(begin));

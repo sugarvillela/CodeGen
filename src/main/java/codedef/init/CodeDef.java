@@ -4,23 +4,20 @@ import codedef.iface.IAttribModifier;
 import codedef.iface.IAttribStruct;
 import codedef.iface.ICodeNode;
 import codedef.impl.AttribModifier;
-import codedef.impl.AttribModifier_Nameless;
 import codedef.impl.AttribStruct;
 import codedef.codenode.CodeNode;
-import codedef.modifier.CODE_NODE;
+import codedef.enums.CODE_NODE;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static codedef.modifier.CODE_NODE.*;
-import static codedef.modifier.ENU_BOOLEAN.*;
-import static codedef.modifier.ENU_COLLECTION.*;
-import static codedef.modifier.ENU_DATA_TYPE.*;
-import static codedef.modifier.ENU_OUT_LANG.JAVA;
-import static codedef.modifier.ENU_QUANTIFIER.*;
-import static codedef.modifier.ENU_VISIBILITY.*;
-import static codedef.modifier.MODIFIER.*;
+import static codedef.enums.CODE_NODE.*;
+import static codedef.enums.ENU_BOOLEAN.*;
+import static codedef.enums.ENU_DATA_TYPE.*;
+import static codedef.enums.ENU_LANGUAGE.JAVA_;
+import static codedef.enums.ENU_VISIBILITY.*;
+import static codedef.enums.MODIFIER.*;
 
 public class CodeDef {
     public static final class LangAgnosticAssumptions{
@@ -46,42 +43,65 @@ public class CodeDef {
         this.initImport(IMPORT);
         this.initImportItem(IMPORT_ITEM);
         this.initClass(CLASS);
-        this.initClassField(CLASS_FIELD);
         this.initMethod(METHOD);
-        this.initConstructor(CONSTRUCTOR);
         this.initMethodArgs(METHOD_ARGS);
-        this.initMethodArg(METHOD_ARG);
-        this.initIfElse(IF_ELSE);
-        this.initConditional(CONDITIONAL);
-        this.initElse(ELSE);
     }
     private void initSmallScopes(){
         this.initCodeBlock(CODE_BLOCK);
         this.initParBlock(PAR_BLOCK);
         this.initBoolBlock(BOOL_BLOCK);
         this.initStatement(STATEMENT);
-        this.initExpr(EXPR);
+        //this.initExpr(EXPR_GRP);
 
-        this.initLeafyText(LIT);
+        this.initIfElse(IF_ELSE);
+        this.initConditional(CONDITIONAL);
         this.initConjunction(CONJUNCTION);
         this.initComparison(COMPARISON);
-        this.initVarDef(VAR_DEF);
-        this.initLeafyText(RETURN, LangAgnosticAssumptions.RETURN);
-        this.initLeafyText(ASSIGN, LangAgnosticAssumptions.ASSIGN);
-        this.initLeafyText(BREAK, LangAgnosticAssumptions.BREAK);
-        this.initComment(COMMENT);
-        this.initComment(COMMENT_LONG);
+        this.initElse(ELSE);
+
+        this.initWhile(WHILE);
+        this.initWhile(DO_WHILE);
+
+        this.initFor(FOR);
+        this.initForInitOrInc(FOR_INIT);
+        this.initForInitOrInc(FOR_INC);
+
+        this.initForIn(FOR_IN);
+
+        this.initVarDef(VAR_DEF_SCALAR);
+        this.initVarDef(VAR_DEF_LIST);
+        this.initVarDef(VAR_DEF_MAP);
+        this.initVarDef(VAR_DEF_SET);
+        this.initVarDefObject(VAR_DEF_OBJECT);
+        this.initVarDefArray(VAR_DEF_ARRAY);
+
+        this.initFunCall(FUN_CALL);
+        this.initNewGenericObject(NEW_LIST);
+        this.initNewGenericObject(NEW_MAP);
+        this.initNewGenericObject(NEW_SET);
+        this.initNewObject(NEW_OBJECT);
+        this.initNewArray(NEW_ARRAY);
+
         this.initSwitch(SWITCH);
         this.initSwitchCase(SWITCH_CASE);
         this.initSwitchDefault(SWITCH_DEFAULT);
+
+        this.initComment(COMMENT);
+        this.initComment(COMMENT_LONG);
+
+        this.initLeafyText(LIT);
+        this.initLeafyText(ASSIGN, LangAgnosticAssumptions.ASSIGN);
+        this.initLeafyText(RETURN, LangAgnosticAssumptions.RETURN);
+        this.initLeafyText(BREAK, LangAgnosticAssumptions.BREAK);
     }
 
     private void initGlob(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initAllowed(OUT_LANG, FORMAT_INDENT);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(LANGUAGE_, INDENT_);
 
-        attribModifier.put(OUT_LANG, JAVA.toString());
-        attribModifier.put(FORMAT_INDENT, "4");
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+        attribModifier.put(LANGUAGE_, JAVA_.toString());
+        attribModifier.put(INDENT_, "4");
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initAllowed(PACKAGE);
@@ -98,7 +118,6 @@ public class CodeDef {
     }
     private void initFile(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initRequired(PATH);
 
         IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
         structHeader.initAllowed(IMPORT, COMMENT);
@@ -106,11 +125,12 @@ public class CodeDef {
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initRequired(CLASS);
 
-        ICodeNode codeStruct = new CodeNode(codeNodeEnum, null, attribModifier, structHeader, structBody);
+        ICodeNode codeStruct = new CodeNode(codeNodeEnum, null, null, structHeader, structBody);
         prototypes.put(codeNodeEnum, codeStruct);
     }
     private void initImport(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initRequired(IMPORT_ITEM);
@@ -120,9 +140,10 @@ public class CodeDef {
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initImportItem(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
-        attribModifier.initAllowed(STATIC);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.initAllowed(STATIC_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, null);
         prototypes.put(codeNodeEnum, codeNode);
@@ -130,61 +151,29 @@ public class CodeDef {
     private void initClass(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
         attribModifier.initRequired();
-        attribModifier.initAllowed(VISIBILITY, ABSTRACT, STATIC, FINAL, IMPLEMENTS, EXTENDS);
+        attribModifier.initAllowed(ACCESS_, ABSTRACT_, STATIC_, FINAL_, IMPLEMENTS_, EXTENDS_);
 
-        attribModifier.put(VISIBILITY, PUBLIC.toString());
-        attribModifier.put(ABSTRACT, FALSE.toString());
-        attribModifier.put(STATIC, FALSE.toString());
-        attribModifier.put(FINAL, FALSE.toString());
-        attribModifier.put(IMPLEMENTS);
-        attribModifier.put(EXTENDS);
+        attribModifier.put(ACCESS_, PUBLIC.toString());
+        attribModifier.put(IMPLEMENTS_);
+        attribModifier.put(EXTENDS_);
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initAllowed(CLASS_FIELD, METHOD, CONSTRUCTOR, COMMENT);
+        structBody.initAllowed(METHOD, COMMENT, STATEMENT);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
-    private void initClassField(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initRequired(DATA_TYPE, COLLECTION);
-        attribModifier.initAllowed(VISIBILITY, STATIC, FINAL, VAR_VALUE);
-
-        attribModifier.put(COLLECTION, SCALAR.toString());     // Denotes scalar vs array
-        attribModifier.put(VISIBILITY, PUBLIC.toString());
-        attribModifier.put(STATIC, FALSE.toString());
-        attribModifier.put(FINAL, FALSE.toString());
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initMethod(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initRequired(DATA_TYPE);
-        attribModifier.initAllowed(VISIBILITY, ABSTRACT, STATIC, FINAL, OVERRIDE);
+        attribModifier.initRequired();
+        attribModifier.initAllowed(ACCESS_, ABSTRACT_, STATIC_, FINAL_, OVERRIDE_, TYPE_RETURN_);
 
-        attribModifier.put(VISIBILITY, PUBLIC.toString());
-        attribModifier.put(DATA_TYPE, VOID.toString());
-        attribModifier.put(ABSTRACT, FALSE.toString());
-        attribModifier.put(STATIC, FALSE.toString());
-        attribModifier.put(FINAL, FALSE.toString());
-        attribModifier.put(OVERRIDE, FALSE.toString());
-
-        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
-        structHeader.initRequired(METHOD_ARGS);
-
-        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(CODE_BLOCK);
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, structHeader, structBody);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
-    private void initConstructor(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initAllowed(VISIBILITY);
-
-        attribModifier.put(NAME, codeNodeEnum.toString());
-        attribModifier.put(VISIBILITY, PUBLIC.toString());
+        attribModifier.put(ACCESS_, PUBLIC.toString());
+        attribModifier.put(TYPE_RETURN_, VOID.toString());
+        attribModifier.put(ABSTRACT_, FALSE.toString());
+        attribModifier.put(STATIC_, FALSE.toString());
+        attribModifier.put(FINAL_, FALSE.toString());
+        attribModifier.put(OVERRIDE_, FALSE.toString());
 
         IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
         structHeader.initRequired(METHOD_ARGS);
@@ -193,40 +182,77 @@ public class CodeDef {
         structBody.initRequired(CODE_BLOCK);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, structHeader, structBody);
+        codeNode.getAttribModifier().getRequired().add(TYPE_RETURN_);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initMethodArgs(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(QUANTIFIER);
-        attribModifier.initAllowed();
-
-        attribModifier.put(QUANTIFIER, ZERO.toString());
-
-        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired();
-        structBody.initAllowed(METHOD_ARG);
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
-    private void initMethodArg(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initRequired(DATA_TYPE, COLLECTION);
-        attribModifier.initAllowed(VAR_VALUE);
-
-        attribModifier.put(COLLECTION, SCALAR.toString());     // Denotes scalar vs array
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initRequired();
-        structBody.initAllowed();
+        structBody.initAllowed(VAR_DEF_GRP);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
+
+    private void initCodeBlock(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
+        structBody.initAllowed(EXPR_GRP, STATEMENT, COMMENT);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initParBlock(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
+        structBody.initRequired(EXPR_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initBoolBlock(CODE_NODE codeNodeEnum){// parentheses-surrounded expression with negate
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        attribModifier.initAllowed(IS_NEGATE_);
+
+        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
+        structBody.initRequired(EXPR_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initStatement(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
+        structBody.initAllowed(EXPR_GRP, VAR_DEF_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+//    private void initExpr(CODE_NODE codeNodeEnum){
+//        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+//        attribModifier.put(NAME_, codeNodeEnum.toString());
+//
+//        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
+//        structBody.initRequired();
+//
+//        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
+//        prototypes.put(codeNodeEnum, codeNode);
+//    }
+
     private void initIfElse(CODE_NODE codeNodeEnum){// conditional, code block, optional else
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired();
-        attribModifier.initAllowed();
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
         structHeader.initRequired(CONDITIONAL);
@@ -235,152 +261,222 @@ public class CodeDef {
         structBody.initRequired(CODE_BLOCK);
         structBody.initAllowed(ELSE);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, structHeader, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, structHeader, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initConditional(CODE_NODE codeNodeEnum){// parentheses-surrounded expression
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(EXPR);
+        structBody.initRequired(EXPR_GRP);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
+    private void initConjunction(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(TYPE_CONJ_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initComparison(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(TYPE_COMP_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
     private void initElse(CODE_NODE codeNodeEnum){// simply wraps a code block
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initRequired(CODE_BLOCK);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
 
-    private void initCodeBlock(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+    private void initWhile(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initRequired(CONDITIONAL);
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initAllowed(EXPR, STATEMENT, COMMENT);
+        structBody.initRequired(CODE_BLOCK);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, structHeader, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
-    private void initParBlock(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+    private void initFor(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initRequired(FOR_INIT, CONDITIONAL, FOR_INC);
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(EXPR);
+        structBody.initRequired(CODE_BLOCK);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, structHeader, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
-    private void initBoolBlock(CODE_NODE codeNodeEnum){// parentheses-surrounded expression with negate
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+    private void initForInitOrInc(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, "i");// NAME_ is variable name; overwrite as needed
 
-        attribModifier.initAllowed(NEGATE);
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initRequired(EXPR_GRP);
 
-        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(EXPR);
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
-    private void initStatement(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-
-        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired(EXPR);
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, structHeader, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
 
-    private void initExpr(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+    private void initForIn(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(ARGS_);
 
-        IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initRequired();
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, structHeader, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
-    private void initConjunction(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(CONJUNCTION_TYPE);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, null);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
-    private void initComparison(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(COMPARISON_TYPE);
-
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, null);
-        prototypes.put(codeNodeEnum, codeNode);
-    }
     private void initVarDef(CODE_NODE codeNodeEnum){
         IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
-        attribModifier.initRequired(DATA_TYPE, COLLECTION);
-        attribModifier.initAllowed(STATIC, FINAL, VAR_VALUE);
-        attribModifier.put(COLLECTION, SCALAR.toString());
-        attribModifier.put(STATIC, FALSE.toString());
-        attribModifier.put(FINAL, FALSE.toString());
+        attribModifier.initAllowed(TYPE_DATA_, ACCESS_, STATIC_, FINAL_);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, null);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, VAR_DEF_GRP, attribModifier, null, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
-    private void initComment(CODE_NODE codeNodeEnum){// simple text, no attrib or children
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
+    private void initVarDefObject(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(TYPE_DATA_);
+        attribModifier.initAllowed(ACCESS_, STATIC_, FINAL_);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, COMMENT, attribModifier, null, null);
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, VAR_DEF_GRP, attribModifier, structHeader, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initVarDefArray(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(TYPE_DATA_, ACCESS_, STATIC_, FINAL_);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, VAR_DEF_GRP, attribModifier, null, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initNewGenericObject(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(ARGS_, LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, NEW_DEF_GRP, attribModifier, structHeader, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+
+    private void initFunCall(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(ARGS_, LIT_);
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, structHeader, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initNewObject(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(TYPE_DATA_);
+        attribModifier.initAllowed(ARGS_, IS_GENERIC_, LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, NEW_DEF_GRP, attribModifier, structHeader, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+    private void initNewArray(CODE_NODE codeNodeEnum){
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initAllowed(TYPE_DATA_, SIZE_, ARGS_, LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        IAttribStruct structHeader = new AttribStruct(codeNodeEnum);
+        structHeader.initAllowed(EXPR_GRP, NEW_DEF_GRP);
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, NEW_DEF_GRP, attribModifier, structHeader, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
 
     private void initSwitch(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
         structBody.initAllowed(SWITCH_CASE, SWITCH_DEFAULT, BREAK);
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, structBody);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initSwitchCase(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initAllowed(CODE_BLOCK, EXPR);
+        structBody.initAllowed(CODE_BLOCK, EXPR_GRP);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initSwitchDefault(CODE_NODE codeNodeEnum){
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
         IAttribStruct structBody = new AttribStruct(codeNodeEnum);
-        structBody.initAllowed(CODE_BLOCK, EXPR);
+        structBody.initAllowed(CODE_BLOCK, EXPR_GRP);
 
         ICodeNode codeNode = new CodeNode(codeNodeEnum, null, attribModifier, null, structBody);
         prototypes.put(codeNodeEnum, codeNode);
     }
 
-    private void initLeafyText(CODE_NODE codeNodeEnum){// simple text, no attrib or children
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
+    private void initComment(CODE_NODE codeNodeEnum){// simple text, no attrib or children
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, null);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, COMMENT, attribModifier, null, null);
+        prototypes.put(codeNodeEnum, codeNode);
+    }
+
+    private void initLeafyText(CODE_NODE codeNodeEnum){// simple text, no attrib or children
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
+
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void initLeafyText(CODE_NODE codeNodeEnum, String langAgnosticText){// simple text, no attrib or children
-        IAttribModifier attribModifier = new AttribModifier_Nameless(codeNodeEnum);
-        attribModifier.initRequired(LIT_VAL);
-        attribModifier.put(LIT_VAL, langAgnosticText);
+        IAttribModifier attribModifier = new AttribModifier(codeNodeEnum);
+        attribModifier.initRequired(LIT_);
+        attribModifier.put(LIT_, langAgnosticText);
+        attribModifier.put(NAME_, codeNodeEnum.toString());
 
-        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR, attribModifier, null, null);
+        ICodeNode codeNode = new CodeNode(codeNodeEnum, EXPR_GRP, attribModifier, null, null);
         prototypes.put(codeNodeEnum, codeNode);
     }
     private void display(){

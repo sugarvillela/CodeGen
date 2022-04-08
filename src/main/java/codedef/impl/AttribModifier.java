@@ -1,39 +1,39 @@
 package codedef.impl;
 
-import iface_global.IErrCatch;
 import err.ERR_TYPE;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 import codedef.iface.IAttribModifier;
-import codedef.modifier.*;
+import codedef.enums.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static codedef.modifier.CODE_NODE.METHOD;
-import static codedef.modifier.MODIFIER.*;
+import static codedef.enums.ENU_BOOLEAN.FALSE;
+import static codedef.enums.ENU_BOOLEAN.TRUE;
+import static codedef.enums.MODIFIER.*;
 
 public class AttribModifier  implements IAttribModifier {
     protected final CODE_NODE codeNodeEnum;
     protected List<MODIFIER> required, allowed;
     protected final HashMap<MODIFIER, String[]> attributes;
-    protected final ModifierContentToJson contentToJson;
-    protected final ModifierContentFromJson contentFromJson;
+    protected final JsonAttribExporter contentToJson;
+    protected final JsonAttribImporter contentFromJson;
 
     public AttribModifier(CODE_NODE codeNodeEnum) {
         this.codeNodeEnum = codeNodeEnum;
         this.required = new ArrayList<>();
         this.allowed = new ArrayList<>();
         this.attributes = new HashMap<>();
-        this.contentToJson = new ModifierContentToJson();
-        this.contentFromJson = new ModifierContentFromJson();
-        this.setModifier(CODE_NODE_TYPE, codeNodeEnum.toString());
+        this.contentToJson = new JsonAttribExporter();
+        this.contentFromJson = new JsonAttribImporter();
+        this.setModifier(TYPE_, codeNodeEnum.toString());
 
-        this.required.add(CODE_NODE_TYPE);
-        this.required.add(NAME);
+        this.required.add(TYPE_);
+        this.required.add(NAME_);
 
-        this.allowed.add(IS_HEADER);
+        this.allowed.add(IS_HEADER_);
     }
     public AttribModifier(
             CODE_NODE codeNodeEnum,
@@ -45,8 +45,8 @@ public class AttribModifier  implements IAttribModifier {
         this.required = required;
         this.allowed = allowed;
         this.attributes = attributes;
-        this.contentToJson = new ModifierContentToJson();
-        this.contentFromJson = new ModifierContentFromJson();
+        this.contentToJson = new JsonAttribExporter();
+        this.contentFromJson = new JsonAttribImporter();
     }
 
     @Override
@@ -61,12 +61,12 @@ public class AttribModifier  implements IAttribModifier {
 
     @Override
     public List<MODIFIER> getRequired() {
-        return required;
+        return new ArrayList<>(required);
     }
 
     @Override
     public List<MODIFIER> getAllowed() {
-        return allowed;
+        return new ArrayList<>(allowed);
     }
 
     @Override
@@ -75,62 +75,55 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     @Override
-    public boolean isRequired(MODIFIER modifier) {
-        return required.contains(modifier);
+    public void put(MODIFIER modifier, Object... objects) {
+        // Validate the value(s) from the JSON file
+
+        // 1. Make sure modifier is allowed
+        this.assertIsAllowedModifier(modifier);
+        // 2. Check values against STRING, INT, FLOAT, BOOL requirement in MODIFIER
+        // 3. Check values.length against ZERO, ONE, MANY requirement in MODIFIER
+        // 4. Check values against enumerated string type, if any
+        Object o = Glob.ATTRIB_CONVERT_UTIL;
+        //AttribConvertUtil o = AttribConvertUtil.initInstance();
+        String[] valuesAsStr = Glob.ATTRIB_CONVERT_UTIL.convert(modifier, objects);
+        this.setModifier(modifier, valuesAsStr);
     }
 
     @Override
-    public MODIFIER reportMissingModifier() {
+    public void assertIsAllowedModifier(MODIFIER modifier) {
+        if(!allowed.contains(modifier) && !required.contains(modifier)){
+            List<MODIFIER> allAllowed = new ArrayList(allowed.size() + required.size());
+            allAllowed.addAll(allowed);
+            allAllowed.addAll(required);
+
+            String desc = String.format(
+                    "Found %s in %s, allowed fields are %s",
+                    modifier,
+                    codeNodeEnum,
+                    String.join(
+                            ", ",
+                            Glob.UTIL_ENUM.enumListToStringList(allAllowed)
+                    )
+            );
+            Glob.ERR.kill(ERR_TYPE.DISALLOWED_ATTRIB, desc);
+        }
+    }
+
+    @Override
+    public void assertHaveAllRequired() {
         for(MODIFIER modifier : required){
             if(!attributes.containsKey(modifier)){
-                return modifier;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void assertIsAllowed(MODIFIER modifier) {
-        if(!allowed.contains(modifier) && !required.contains(modifier)){
-            Glob.ERR.kill(ERR_TYPE.UNKNOWN_ID, modifier.toString());
-        }
-    }
-
-    @Override
-    public void put(MODIFIER modifier, String... values) {
-        // Validate the value(s) from the JSON file
-        // 1. Make sure modifier is allowed
-        assertIsAllowed(modifier);
-        // 2. Check values.length against ZERO, ONE, MANY requirement in MODIFIER
-        Glob.ERR.check(
-                modifier.initArgQuantity().assertValidQuantity(values.length),
-                values
-        );
-        // 3. If value should be an enumerated string, check that valid string is provided
-        if(modifier.isEnumerated()){
-            Glob.ERR.check(
-                    Glob.UTIL_ENUM.assertValid(modifier.enumeratedType(), values[0]),
-                    values
-            );
-        }
-        // 4. or check that numeric/bool settings are valid, strings are not empty or uppercase boolean
-        else{
-            for(String value : values){
-                Glob.ERR.check(
-                        modifier.initArgType().assertValidData(value),
-                        value
+                String desc = String.format(
+                        "Missing %s in %s, required fields are %s",
+                        modifier,
+                        codeNodeEnum,
+                        String.join(
+                                ", ",
+                                Glob.UTIL_ENUM.enumListToStringList(required)
+                        )
                 );
+                Glob.ERR.kill(ERR_TYPE.MISSING_REQUIRED, desc);
             }
-        }
-        switch(modifier){
-            case DATA_TYPE:     // enumerated type, related to var value
-                this.setDataType(values);
-                break;
-            case VAR_VALUE:     // related to data type
-                this.setVarValue(values);
-                break;
-            default:            // all others
-                this.setModifier(modifier, values);
         }
     }
 
@@ -170,43 +163,6 @@ public class AttribModifier  implements IAttribModifier {
                 "}";
     }
 
-    // DATA_TYPE and VAR_VALUE are related, and it is uncertain which will be set first.
-    // If DATA_TYPE is set first, set a default VAR_VALUE
-    // If VAR_VALUE is set first, infer a DATA_TYPE
-    // If DATA_TYPE set after, and the VAR_VALUE is compatible, leave it; else reset the default VAR_VALUE
-    private void setDataType(String dataTypeName[]) {
-        ENU_DATA_TYPE dataTypeEnu;
-        if((dataTypeEnu = ENU_DATA_TYPE.fromString(dataTypeName[0])) == null){// not a valid dataType
-            Glob.ERR.kill(ERR_TYPE.SYNTAX);
-            return;
-        }
-        String[] currValue = attributes.get(VAR_VALUE);
-        if( // not set or is incompatible
-            currValue == null ||
-            dataTypeEnu.assertValidData(currValue[0]) != ERR_TYPE.NONE
-        ){
-            this.setModifier(VAR_VALUE, dataTypeEnu.getDefaultValue());
-        }
-        this.setModifier(MODIFIER.DATA_TYPE, dataTypeName);
-    }
-    private void setVarValue(String[] value) {
-        String[] currDataType = attributes.get(DATA_TYPE);
-        ENU_DATA_TYPE dataTypeEnu;
-        if( // not set or is incompatible
-            currDataType == null ||
-                    (dataTypeEnu = ENU_DATA_TYPE.fromString(currDataType[0])).
-                    assertValidData(value[0]) != ERR_TYPE.NONE
-        ){
-            this.setModifier(
-                MODIFIER.DATA_TYPE,
-                ENU_DATA_TYPE.findCompatibleType(
-                    value[0],
-                    (METHOD == this.codeNodeEnum)).toString()
-            );
-        }
-        this.setModifier(VAR_VALUE, value[0]);
-    }
-
     private void setModifier(MODIFIER modifier, String... value) {
         attributes.put(modifier, value);
     }
@@ -219,35 +175,31 @@ public class AttribModifier  implements IAttribModifier {
     }
 
     @Override
-    public void fromJson(JSONObject attrObj, IErrCatch errCatch) {
-        contentFromJson.readIn(this, attrObj, errCatch);
+    public void importJson(JSONObject attrObj) {
+        contentFromJson.readIn(this, attrObj);
     }
 
     @Override
-    public JSONObject toJson() {
+    public JSONObject exportJson() {
         return contentToJson.getJsonObj(this);
     }
 
-    private static class ModifierContentToJson {
+    private static class JsonAttribExporter {
         public JSONObject getJsonObj(IAttribModifier attribModifier){
             return new JSONObject(attribModifier.getAttributes());
         }
     }
 
-    private static class ModifierContentFromJson {
-        public void readIn(IAttribModifier attribModifier, JSONObject attrObj, IErrCatch errCatch) {
-            Iterator<?> keys = attrObj.keySet().iterator();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
+    private static class JsonAttribImporter {
+        public void readIn(IAttribModifier attribModifier, JSONObject attrObj) {
+            for (String key : attrObj.keySet()) {
+                MODIFIER modifier = Glob.JSON_ERR_HANDLER.toModifierEnum(key);
 
-                MODIFIER modifier = errCatch.toModifierEnum(key);
-
-                JSONArray jArr = errCatch.toJArr(attrObj, key);
-                if(jArr.isEmpty()){
+                JSONArray jArr = Glob.JSON_ERR_HANDLER.toJArr(attrObj, key);
+                if (jArr.isEmpty()) {
                     attribModifier.clear(modifier);
-                }
-                else{
-                    attribModifier.put(modifier, errCatch.toArray(jArr));
+                } else {
+                    attribModifier.put(modifier, Glob.JSON_ERR_HANDLER.toArray(jArr));
                 }
             }
         }

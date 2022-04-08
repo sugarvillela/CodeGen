@@ -43,18 +43,10 @@ public class PairMatch extends BaseStringParser {
         }
         return this;
     }
-    @Override
-    public List<Integer> numericToList() {
-        return Arrays.stream(this.numericToArray()).boxed().collect(Collectors.toList());
-    }
-
-    @Override
-    public int[] numericToArray() {
-        return hitMap;
-    }
 
     protected void parseByChar(int i) {
         char curr = text.charAt(i);
+
         if(isEscape(curr)){
             escaped = true;
         }
@@ -80,6 +72,16 @@ public class PairMatch extends BaseStringParser {
                 }
             }
         }
+    }
+
+    @Override
+    public List<Integer> numericToList() {
+        return Arrays.stream(this.numericToArray()).boxed().collect(Collectors.toList());
+    }
+
+    @Override
+    public int[] numericToArray() {
+        return hitMap;
     }
 
     @Override

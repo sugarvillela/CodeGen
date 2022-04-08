@@ -1,7 +1,7 @@
 package codedef.iface;
 
 import iface_global.ICsv;
-import codedef.modifier.MODIFIER;
+import codedef.enums.MODIFIER;
 import iface_global.ISerializableJson;
 
 import java.util.HashMap;
@@ -14,11 +14,11 @@ public interface IAttribModifier extends ICsv, ISerializableJson {
     List<MODIFIER> getAllowed();
     HashMap<MODIFIER, String[]> getAttributes();
 
-    boolean isRequired(MODIFIER modifier);
-    MODIFIER reportMissingModifier();
-    void assertIsAllowed(MODIFIER modifier);
+    // Validation for attributes
+    void assertIsAllowedModifier(MODIFIER modifier);
+    void assertHaveAllRequired();
 
-    void put(MODIFIER modifier, String... values);
+    void put(MODIFIER modifier, Object... objects);
     void clear(MODIFIER modifier);
     String[] get(MODIFIER modifier);
 

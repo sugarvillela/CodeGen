@@ -1,9 +1,9 @@
 package tokenizer.impl;
 
 import tokenizer.iface.IStringParser;
-import tokenizer.util_iface.ICaseTest;
+import tokenizer.iface_anon.ICaseTest;
 import tokenizer.util_iface.ISymbolPairs;
-import tokenizer.util_iface.IWhitespaceTest;
+import tokenizer.iface_anon.IWhitespaceTest;
 import tokenizer.util_impl.SymbolPairs;
 
 import java.util.List;
@@ -12,17 +12,17 @@ import java.util.Stack;
 public abstract class BaseStringParser implements IStringParser {
     protected static final char escape = '\\';
     protected IWhitespaceTest whitespaceTest; // object for char matchers to test for whitespace
-    protected ICaseTest caseTest;             // object for all matchers to test case sensitive or insensitive
-    protected String delimiters;              // input text, list of delimiters text
+    protected ICaseTest caseTest;             // object for all matchers to test case-sensitive or insensitive
+    protected String delimiters;              // list of delimiters text
     protected ISymbolPairs symbolPairs;       // matched open/close char arrays
-    protected Stack<Character> skipStack;     // Closing symbol during skip
     protected boolean caseSensitive;          // affects match utils
     protected boolean tokenizeDelimiter;      // save delimiter to own element
     protected boolean delimiterOnce;          // save delimiter to own element, ignore duplicates
     protected int limit;                      // number of tokens allowed
-    protected int startPos;
-    protected String text;
-    protected boolean escaped;                // state
+    protected int startPos;                   // ignore before this position is reached
+    protected String text;                    // input text
+    protected Stack<Character> skipStack;     // state during run: closing symbol during skip
+    protected boolean escaped;                // state during run: ignoring after escape char
 
     protected BaseStringParser(){
         skipStack = new Stack<>();

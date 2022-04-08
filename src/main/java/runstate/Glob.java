@@ -1,14 +1,18 @@
 package runstate;
 
-import translators.impl.OutLangManager;
+import codedef.impl.AttribConvertUtil;
+import codejson.JsonErrHandler;
+import translators.iface.ITranslationCenter;
+import translators.impl.TranslationCenter;
+import codedef.codenode.NodeWrapUtil;
 import util_enu.UtilEnum;
 import utilfile.FileNameUtil;
-import utilfile.SmallFileDump;
 import err.iface.IErr;
 import err.impl.Err;
 import err.impl.ErrDev;
 import codedef.impl.PrototypeFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,21 +24,18 @@ public class Glob {
     public static final IErr                ERR_DEV =               ErrDev.initInstance();
     public static final IErr                ERR =                   Err.initInstance();
 
-    public static final String              NULL_TEXT =             "-";    // for csv strings
+    public static final String              DEFAULT_PATH =          "src" + File.separator + "test" + File.separator + "resources";
 
-    //public static final ITokenizer          TOKENIZER =             Tokenizer.initInstance();
     public static final FileNameUtil        FILE_NAME_UTIL =        FileNameUtil.initInstance();
-    public static final SmallFileDump       SMALL_FILE_DUMP =       SmallFileDump.initInstance();
-
-    //public static final RunState            RUN_STATE =             RunState.initInstance();
-
     public static final UtilEnum            UTIL_ENUM =             UtilEnum.initInstance();
-    //public static final UtilJson            UTIL_JSON =             UtilJson.initInstance();
-    public static final OutLangManager      OUT_LANG_MANAGER =      OutLangManager.initInstance();
-    public static final PrototypeFactory    PROTOTYPE_FACTORY =     PrototypeFactory.initInstance();
+    public static final ITranslationCenter  TRANSLATION_CENTER =    TranslationCenter.initInstance();
+    public static final JsonErrHandler      JSON_ERR_HANDLER =      JsonErrHandler.initInstance();
+    public static final NodeWrapUtil CONVERT_UTIL =          NodeWrapUtil.initInstance();
+    public static final AttribConvertUtil   ATTRIB_CONVERT_UTIL =   AttribConvertUtil.initInstance();
     public static final String              TIME_INIT =             (new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")).format(new Date());
     //laptop
     public static final String GEN_PATH = "C:\\Users\\daves\\OneDrive\\Documents\\GitHub\\SemanticAnalyzer\\src\\main\\java\\generated";
+    public static final PrototypeFactory    PROTOTYPE_FACTORY =     PrototypeFactory.initInstance();
     //desktop
     //public static final String GEN_PATH = "C:\\Users\\Dave Swanson\\OneDrive\\Documents\\GitHub\\SemanticAnalyzer\\src\\main\\java\\generated";
 

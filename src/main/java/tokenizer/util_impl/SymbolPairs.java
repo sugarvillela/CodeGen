@@ -2,16 +2,21 @@ package tokenizer.util_impl;
 
 import tokenizer.util_iface.ISymbolPairs;
 
+/** A class to manage opening/closing symbol pairs */
 public class SymbolPairs implements ISymbolPairs {
     private final char[] oSymbols, cSymbols;
 
-    public SymbolPairs(String symbolList) {
-        int len = symbolList.length();
+    /** Pass a string of openers, like "[{" to populate closers "]}"
+     *  Passing a quote as opener gives the same quote as closer.
+     *  For unusual symbols, use the char array constructor version.
+     * @param openerList All desired opening symbols */
+    public SymbolPairs(String openerList) {
+        int len = openerList.length();
         oSymbols = new char[len];
         cSymbols = new char[len];
         for(int i = 0; i < len; i++){
-            oSymbols[i] = symbolList.charAt(i);
-            cSymbols[i] = this.mapOpenToClose(symbolList.charAt(i));
+            oSymbols[i] = openerList.charAt(i);
+            cSymbols[i] = this.mapOpenToClose(openerList.charAt(i));
         }
     }
 

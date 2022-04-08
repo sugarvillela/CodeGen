@@ -2,118 +2,56 @@ package codedef.impl;
 
 import codedef.iface.ICodeNode;
 import mock.MockSource;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import runstate.Glob;
 import codedef.iface.IAttribModifier;
 import codedef.iface.IAttribStruct;
-import codedef.init.CodeDef;
-import codedef.modifier.ENU_DATA_TYPE;
-import codedef.modifier.MODIFIER;
+import codedef.enums.MODIFIER;
 
-import static codedef.modifier.CODE_NODE.*;
-import static codedef.modifier.MODIFIER.*;
+import static codedef.enums.CODE_NODE.*;
+import static codedef.enums.MODIFIER.*;
 
 class CodeAttribTest {
     MockSource mockSource = new MockSource();
 
     @Test
-    void setSimpleAttribModifier() {
-        IAttribModifier attrib = new AttribModifier(FILE);
-        attrib.initRequired(NAME, PATH);
-        attrib.initAllowed();
-        attrib.put(NAME, "attribName");
-        attrib.put(PATH, "attribPath");
-        System.out.println(attrib.csvString());
-        String expected = "ICodeAttrib{codeNodeEnum=FILE,required=[NAME, PATH],allowed=[NAME, PATH],attributes={NAME:[attribName],PATH:[attribPath]}}";
+    void givenDefaultAttribModifier_showDefaults() {
+        IAttribModifier attrib = Glob.PROTOTYPE_FACTORY.get(FILE).getAttribModifier();
+        String expected = "ICodeAttrib{codeNodeEnum=FILE,required=[TYPE_, NAME_],allowed=[IS_HEADER_],attributes={TYPE_=[FILE]}}";
         String actual = attrib.csvString();
+        System.out.println(actual);
         Assertions.assertEquals(expected, actual);
     }
     @Test
-    void setSimpleAttribStruct() {
-        IAttribStruct attrib = new AttribStruct(METHOD);
-        attrib.initRequired(METHOD_ARGS);
-        attrib.initAllowed();
-        System.out.println(attrib.csvString());
-        String expected = "IAttribStruct{codeNodeEnum=METHOD,required=[CODE, METHOD_ARGS],allowed=[CODE, METHOD_ARGS]}}";
-        String actual = attrib.csvString();
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void setVarious() {
-        String actual, expected;
-        IAttribModifier attrib = new AttribModifier(VAR_DEF);
-        attrib.initRequired(NAME, DATA_TYPE, QUANTIFIER);
-        attrib.initAllowed(STATIC, FINAL, VAR_VALUE);
-        attrib.put(STATIC, "FALSE");
-        attrib.put(FINAL, "FALSE");
+    void givenDefaultAttribStruct_showDefaults() {
+        ICodeNode codeNode = Glob.PROTOTYPE_FACTORY.get(FILE);
+        IAttribStruct header = codeNode.getStructHeader();
+        IAttribStruct body = codeNode.getStructBody();
 
-        attrib.put(DATA_TYPE, "INT");
-        actual = attrib.get(VAR_VALUE)[0];
-        expected = "0";
-        Assertions.assertEquals(expected, actual);
-
-        attrib.put(DATA_TYPE, "BOOLEAN");
-        actual = attrib.get(VAR_VALUE)[0];
-        expected = "FALSE";
-        Assertions.assertEquals(expected, actual);
-
-        attrib.put(DATA_TYPE, "STRING");
-        actual = attrib.get(VAR_VALUE)[0];
-        expected = "";
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void viewAll() {
-        CodeDef codeDef = new CodeDef();
+        String header1 = header.csvString();
+        String body1 = body.csvString();
+        System.out.println(header1);
+        System.out.println(body1);
+        Assertions.assertEquals("IAttribStruct{codeNodeEnum=FILE,required=[],allowed=[IMPORT, COMMENT]}}", header1);
+        Assertions.assertEquals("IAttribStruct{codeNodeEnum=FILE,required=[CLASS],allowed=[]}}", body1);
     }
 
-    @Test
-    void givenPopulatedAttribModifier_getJson() {
-        String expected = "{\"allowed\":[\"NAME\",\"VISIBILITY\",\"ABSTRACT\",\"STATIC\",\"FINAL\",\"IMPLEMENTS\",\"EXTENDS\"],\"attributes\":{\"EXTENDS\":[],\"VISIBILITY\":[\"PUBLIC\"],\"IMPLEMENTS\":[],\"FINAL\":[\"FALSE\"],\"ABSTRACT\":[\"FALSE\"],\"STATIC\":[\"FALSE\"]},\"required\":[\"NAME\"]}";
-        IAttribModifier attrib = mockSource.mockAttribModifier();
-        System.out.println(attrib.csvString());
-        JSONObject jsonObj = attrib.toJson();
-        String actual = jsonObj.toString();
-        System.out.println(jsonObj);
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void givenPopulatedAttribStruct_getJson() {
-        String expected = "{\"allowed\":[\"IMPORT\",\"CLASS_FIELD\",\"METHOD\"],\"required\":[\"IMPORT\"]}";
-        IAttribStruct attrib = mockSource.mockAttribStruct();
-        System.out.println(attrib.csvString());
-        JSONObject jsonObj = attrib.toJson();
-        String actual = jsonObj.toString();
-        System.out.println(jsonObj);
-        Assertions.assertEquals(expected, actual);
-    }
     @Test
     void givenPopulatedCodeNode_getJson() {
-        String expected = "{\"structBody\":{\"allowed\":[\"IMPORT\",\"CLASS_FIELD\",\"METHOD\"],\"required\":"+
-                "[\"IMPORT\"]},\"attribModifier\":{\"allowed\":[\"NAME\",\"VISIBILITY\",\"ABSTRACT\",\"STATIC\","+
-                "\"FINAL\",\"IMPLEMENTS\",\"EXTENDS\"],\"attributes\":{\"EXTENDS\":[],\"FINAL\":[\"FALSE\"],"+
-                "\"VISIBILITY\":[\"PUBLIC\"],\"IMPLEMENTS\":[],\"ABSTRACT\":[\"FALSE\"],\"STATIC\":[\"FALSE\"]},"+
-                "\"required\":[\"NAME\"]},\"codeNodeType\":\"CLASS\"}";
         ICodeNode codeNode = mockSource.mockCodeNode();
-        System.out.println(codeNode.csvString());
-        JSONObject jsonObj = codeNode.toJson();
-        String actual = jsonObj.toString();
-        System.out.println(jsonObj);
+        String expected = "{\"children\":[],\"attributes\":{\"EXTENDS_\":[],\"ACCESS_\":[\"PUBLIC\"],\"FINAL_\":[\"FALSE\"],\"IMPLEMENTS_\":[],\"TYPE_\":[\"CLASS\"],\"ABSTRACT_\":[\"FALSE\"],\"STATIC_\":[\"FALSE\"]}}";
+        String actual = codeNode.exportJson().toString();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void testUtilEnum() {
-        MODIFIER mod = Glob.UTIL_ENUM.fromString(MODIFIER.class, "ATTRIB_SCOPE");
-        Assertions.assertEquals(mod, ATTRIB_SCOPE);
+        MODIFIER mod = Glob.UTIL_ENUM.fromString(MODIFIER.class, "LANGUAGE_");
+        Assertions.assertEquals(mod, LANGUAGE_);
 
         System.out.println("A: " + mod);
         mod = Glob.UTIL_ENUM.fromString(MODIFIER.class, "BOOBOO");
         Assertions.assertNull(mod);
-
-        ENU_DATA_TYPE enu = Glob.UTIL_ENUM.fromString(ENU_DATA_TYPE.class, "VOID");
-        Assertions.assertEquals(enu, ENU_DATA_TYPE.VOID);
     }
 }

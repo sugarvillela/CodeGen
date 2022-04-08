@@ -20,24 +20,23 @@ public interface IFormatter {
             code.append(text);
         }
     }
-    default void addWord(StringBuilder code, String text){
-        text = this.trimBack(text);
-        this.add(code, text);
-    }
 
-    default void addWord_(StringBuilder code, String text){
-        this.addWord(code, text);
-        code.append(' ');
+    default void addWord(StringBuilder code, String text){
+        if(!text.isEmpty()){
+            code.append(text).append(' ');
+        }
     }
 
     default void addLine(StringBuilder code, String text){
-        this.addWord(code, text);
-        code.append(N_.entity());
+        if(!text.isEmpty()){
+            code.append(text).append(N_.entity());
+        }
     }
 
     default void addStatement(StringBuilder code, String text){
-        this.addWord(code, text);
-        code.append(";").append(N_.entity());
+        if(!text.isEmpty()){
+            code.append(text).append(";").append(N_.entity());
+        }
     }
 
     default void addBlank(StringBuilder code){
@@ -51,6 +50,8 @@ public interface IFormatter {
     default void addDec(StringBuilder code){
         code.append(D_.entity());
     }
+
+    void setTab(int tab);//default 4
 
     String formatAll(String text);
 

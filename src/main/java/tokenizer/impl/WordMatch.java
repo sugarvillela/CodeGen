@@ -1,7 +1,7 @@
 package tokenizer.impl;
 
 import tokenizer.iface.IStringParser;
-import tokenizer.util_iface.ICaseTest;
+import tokenizer.iface_anon.ICaseTest;
 import tokenizer.util_impl.SymbolPairsNop;
 
 import java.util.ArrayList;

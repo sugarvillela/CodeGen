@@ -1,11 +1,10 @@
 package codedef.impl;
 
-import iface_global.IErrCatch;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import codedef.iface.IAttribStruct;
 import codedef.iface.ICodeNode;
-import codedef.modifier.CODE_NODE;
+import codedef.enums.CODE_NODE;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -13,19 +12,19 @@ import java.util.stream.Stream;
 public class AttribStruct implements IAttribStruct {
     protected final CODE_NODE codeNodeEnum;
     protected List<CODE_NODE> required, allowed;
-    protected final StructContentToJson contentToJson;
+    protected final JsonAttribExporter contentToJson;
 
     public AttribStruct(CODE_NODE codeNodeEnum) {
         this.codeNodeEnum = codeNodeEnum;
         this.required = new ArrayList<>();
         this.allowed = new ArrayList<>();
-        this.contentToJson = new StructContentToJson();
+        this.contentToJson = new JsonAttribExporter();
     }
     public AttribStruct(CODE_NODE codeNodeEnum, List<CODE_NODE> required, List<CODE_NODE> allowed) {
         this.codeNodeEnum = codeNodeEnum;
         this.required = required;
         this.allowed = allowed;
-        this.contentToJson = new StructContentToJson();
+        this.contentToJson = new JsonAttribExporter();
     }
 
     @Override
@@ -40,12 +39,12 @@ public class AttribStruct implements IAttribStruct {
 
     @Override
     public List<CODE_NODE> getRequired() {
-        return required;
+        return new ArrayList<>(required);
     }
 
     @Override
     public List<CODE_NODE> getAllowed() {
-        return allowed;
+        return new ArrayList<>(allowed);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class AttribStruct implements IAttribStruct {
         if(required != null){
             Stream<ICodeNode> stream = children.stream();
             for(CODE_NODE requiredEnum : required){
-                if(stream.noneMatch(child -> (child.enumGroup() == requiredEnum || child.codeNodeEnum() == requiredEnum))){
+                if(stream.noneMatch(child -> (child.enumGroup() == requiredEnum || child.getCodeNodeEnum() == requiredEnum))){
                     return requiredEnum;
                 }
             }
@@ -87,16 +86,14 @@ public class AttribStruct implements IAttribStruct {
     }
 
     @Override
-    public void fromJson(JSONObject jsonObject, IErrCatch errCatch) {
-
-    }
+    public void importJson(JSONObject jsonObject) {}
 
     @Override
-    public JSONObject toJson() {
+    public JSONObject exportJson() {
         return contentToJson.getJsonObj(this);
     }
 
-    private static class StructContentToJson {
+    private static class JsonAttribExporter {
         public JSONObject getJsonObj(IAttribStruct attribStruct){
             JSONObject out = new JSONObject();
             out.put("required", new JSONArray(attribStruct.getRequired()));

@@ -36,7 +36,7 @@ public class WordTok extends BaseTok {
                 }
                 last = k;
             }
-            if(last < text.length() - 1){
+            if(last < text.length()){
                 tokens.add(text.substring(last));
             }
         }

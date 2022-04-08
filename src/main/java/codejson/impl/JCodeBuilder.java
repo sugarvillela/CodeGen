@@ -2,27 +2,27 @@ package codejson.impl;
 
 import codedef.iface.ICodeNode;
 import codedef.impl.PrototypeFactory;
-import codedef.modifier.CODE_NODE;
-import iface_global.IErrCatch;
+import codedef.enums.CODE_NODE;
+import codejson.JsonErrHandler;
 import codejson.iface.IJCodeBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import runstate.Glob;
 import utilfile.UtilFileJson;
 
-import static codedef.modifier.MODIFIER.CODE_NODE_TYPE;
+import static codedef.enums.MODIFIER.TYPE_;
 
 public class JCodeBuilder implements IJCodeBuilder {
-    private final IErrCatch errCatch;
+    private final JsonErrHandler jsonErrHandler;
     private ICodeNode root;
 
     public JCodeBuilder() {
-        errCatch = new IErrCatch(){};
+        jsonErrHandler = Glob.JSON_ERR_HANDLER;
     }
 
     @Override
     public IJCodeBuilder build(String filePath) {
-        return this.build(new UtilFileJson().getJsonObject(filePath));
+        return this.build(UtilFileJson.initInstance().getJsonObject(filePath));
     }
 
     @Override
@@ -40,23 +40,22 @@ public class JCodeBuilder implements IJCodeBuilder {
         PrototypeFactory f = Glob.PROTOTYPE_FACTORY;
 
         // get ICodeNode prototype from type
-        JSONObject attrObj = errCatch.toJObj(jObject, "attributes");
-        System.out.println(attrObj);
-        String attribKey = CODE_NODE_TYPE.toString();
-        CODE_NODE codeNodeEnum = errCatch.toCodeNodeEnum(
-                errCatch.toStr(attrObj, attribKey)
+        JSONObject attrObj = jsonErrHandler.toJObj(jObject, "attributes");
+        String attribKey = TYPE_.toString();
+        CODE_NODE codeNodeEnum = jsonErrHandler.toCodeNodeEnum(
+                jsonErrHandler.toStr(attrObj, attribKey)
         );
         ICodeNode codeNode = f.get(codeNodeEnum);
 
         // populate attributes
-        codeNode.getAttribModifier().fromJson(attrObj, errCatch);
+        codeNode.getAttribModifier().importJson(attrObj);
 
         // populate children
-        JSONArray children = errCatch.toJArr(jObject, "children");
+        JSONArray children = jsonErrHandler.toJArr(jObject, "children");
         ICodeNode[] childrenToAdd = new ICodeNode[children.length()];
         int k = 0;
         for(Object childObject : children){
-            JSONObject jChildObject = errCatch.toJObj(childObject);
+            JSONObject jChildObject = jsonErrHandler.toJObj(childObject);
             childrenToAdd[k++] = this.recurse(jChildObject);
         }
         return codeNode.setChildren(childrenToAdd);

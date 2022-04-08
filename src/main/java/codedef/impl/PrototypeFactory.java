@@ -2,15 +2,15 @@ package codedef.impl;
 
 import codedef.iface.ICodeNode;
 import codedef.init.CodeDef;
-import codedef.modifier.CODE_NODE;
+import codedef.enums.CODE_NODE;
 
 import java.util.HashMap;
 
+/**A singleton class with instance maintained at Glob.PROTOTYPE_FACTORY
+ * On start: calls CodeDef to populate prototypes map */
 public class PrototypeFactory {
-    private static PrototypeFactory instance;
-
     public static PrototypeFactory initInstance(){
-        return(instance ==  null)? (instance = new PrototypeFactory()) : instance;
+        return new PrototypeFactory();
     }
 
     private final HashMap<CODE_NODE, ICodeNode> prototypes;

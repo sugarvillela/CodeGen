@@ -1,6 +1,6 @@
 package tokenizer.simpl;
 
-import tokenizer.util_iface.IWhitespaceTest;
+import tokenizer.iface_anon.IWhitespaceTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;

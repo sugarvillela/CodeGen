@@ -14,13 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class UtilFileJson {
+    private static UtilFileJson instance;
+
+    public static UtilFileJson initInstance(){
+        return (instance == null)? (instance = new UtilFileJson()) : instance;
+    }
+
     private int indent;
 
-    public UtilFileJson(){
+    private UtilFileJson(){
         indent = 2;
-    }
-    public void setIndent(int indent){
-        this.indent = indent;
     }
 
     /** If file content is unknown, get an object and check type before using
@@ -48,6 +51,7 @@ public class UtilFileJson {
         }
         return null;
     }
+
     /** If file content is known, get the appropriate JSON type
      * @return JSONObject, if file describes the correct type */
     public JSONObject getJsonObject(String filePath){
@@ -62,6 +66,7 @@ public class UtilFileJson {
         }
         return null;
     }
+
     /** If file content is known, get the appropriate JSON type
      * @return JSONArray, if file describes the correct type */
     public JSONArray getJsonArray(String filePath){
@@ -84,9 +89,22 @@ public class UtilFileJson {
             Glob.ERR.kill(ERR_TYPE.FILE_ERROR, e.getMessage());
         }
     }
+
     public void put(JSONArray jsonArray, String filePath){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(jsonArray.toString(indent));
+        } catch (IOException e) {
+            Glob.ERR.kill(ERR_TYPE.FILE_ERROR, e.getMessage());
+        }
+    }
+
+    public void put(String content, String filePath){
+        File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        try (
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file))
+        ) {
+            writer.write(content);
         } catch (IOException e) {
             Glob.ERR.kill(ERR_TYPE.FILE_ERROR, e.getMessage());
         }

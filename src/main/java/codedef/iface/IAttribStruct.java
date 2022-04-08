@@ -1,7 +1,7 @@
 package codedef.iface;
 
 import iface_global.ICsv;
-import codedef.modifier.CODE_NODE;
+import codedef.enums.CODE_NODE;
 import iface_global.ISerializableJson;
 
 import java.util.List;

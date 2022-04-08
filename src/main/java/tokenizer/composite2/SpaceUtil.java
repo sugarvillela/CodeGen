@@ -8,6 +8,7 @@ import tokenizer.util_iface.ISymbolPairs;
 
 import java.util.List;
 
+/** A space tokenizer that leaves indent untouched */
 public class SpaceUtil extends BaseTok {
     public SpaceUtil() {
         super(new CharMatch().setDelimiter(" "));
@@ -25,15 +26,19 @@ public class SpaceUtil extends BaseTok {
         if(!hitMap.isEmpty()){
             int i = 0;
 
-            // skip spaces at front
+            // count continuous spaces at front
             for(; i < hitMap.size(); i++){
                 if(i != hitMap.get(i)){
                     break;
                 }
             }
+
+            // tokenize on spaces, ignoring spaces at front
             String text = parser.getText();
             IStringParser tokenizer = new CharTok().setStartPos(i).setDelimiter(" ")
                     .setSkipSymbols(parser.getSymbolPairs()).setText(text);
+
+            // put result back into CharMatch text for access by getters
             parser.setText(String.join(" ", tokenizer.parse().toList()));
         }
         return this;

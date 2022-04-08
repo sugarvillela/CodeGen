@@ -5,6 +5,8 @@ import runstate.Glob;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UtilEnum {
     private static UtilEnum instance;
@@ -30,7 +32,7 @@ public class UtilEnum {
     }
 
     public <T extends Enum<T>> boolean isValid(Class<?> enumClass, String value){
-        return fromString(enumClass, value) != null;
+        return (fromString(enumClass, value) != null);
     }
 
     public <T extends Enum<T>> ERR_TYPE assertValid(Class<?> enumClass, String value){
@@ -43,5 +45,13 @@ public class UtilEnum {
             Glob.ERR.kill(ERR_TYPE.UNKNOWN_KEY, value);
         }
         return out;
+    }
+
+    public <T extends Enum<T>> List<String> enumListToStringList(List<T> source){
+        List<String> dest =  new ArrayList<>(source.size());
+        for(T enu : source){
+            dest.add(String.valueOf(enu));
+        }
+        return dest;
     }
 }

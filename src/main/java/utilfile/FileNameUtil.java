@@ -1,9 +1,10 @@
 package utilfile;
 
+import runstate.Glob;
+
 import java.io.File;
 
 public class FileNameUtil {
-    public static final String DEFAULT_PATH = "src"+ File.separator+"test"+File.separator+"resources";
 
     private static FileNameUtil instance;
 
@@ -36,7 +37,7 @@ public class FileNameUtil {
     }
 
     public String mergeDefaultPath(String fileName){
-        return DEFAULT_PATH + File.separator + fileName;
+        return Glob.DEFAULT_PATH + File.separator + fileName;
     }
 
     public String getFileNameFromPath(String path){

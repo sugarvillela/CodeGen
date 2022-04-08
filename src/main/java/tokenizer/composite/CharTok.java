@@ -41,7 +41,7 @@ public class CharTok extends BaseTok {
 
                 prevIndex = k;
             }
-            if(prevIndex < text.length() - 1){
+            if(prevIndex < text.length()){
                 tokens.add(text.substring(prevIndex));
             }
         }

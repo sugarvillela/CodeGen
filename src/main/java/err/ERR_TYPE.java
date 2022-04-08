@@ -11,18 +11,22 @@ public enum ERR_TYPE {
     UNKNOWN_KEY         ("Unknown attribute key"),
     INVALID_BOOL        ("Expected (uppercase) TRUE FALSE boolean here"),
     INVALID_INT         ("Expected integer value here"),
+    INVALID_LONG        ("Expected long integer value here"),
     INVALID_FLOAT       ("Expected floating-point value here"),
     INVALID_STRING      ("Expected non-empty text here"),
     INVALID_NUMBER      ("Expected the proper numeric type here"),
     INVALID_QUANTITY    ("Expected the correct number of items here"),
+    INVALID_ENUM        ("Expected an enumerated value here"),
+    INVALID_ARG         ("Expected the correct arg type here"),
 
     // Attrib or structure
     MISSING_REQUIRED    ("A required field is missing"),
     DISALLOWED_NESTING  ("Disallowed nesting"),
+    DISALLOWED_ATTRIB   ("Disallowed attribute"),
     LANGUAGE_ERR        ("Disallowed in target language"),
 
     // Text Event errors
-    BAD_JSON("JSON object improperly formed"),
+    BAD_JSON            ("JSON object improperly formed"),
     MISPLACED_CHAR      ("Misplaced character"),
     DUPLICATE_ID        ("Identifier already exists"),//delete these
     UNKNOWN_ID          ("Identifier is not defined"),
@@ -42,8 +46,7 @@ public enum ERR_TYPE {
         this.isErr = isErr;
     }
     ERR_TYPE(String message) {
-        this.message = message;
-        this.isErr = true;
+        this(message, true);
     }
     
     public String message(){

@@ -2,7 +2,8 @@ package iface_global;
 
 import org.json.JSONObject;
 
+/** Any class that reads/writes Json files should implement this */
 public interface ISerializableJson {
-    void fromJson(JSONObject jsonObject, IErrCatch errCatch);
-    JSONObject toJson();
+    void importJson(JSONObject jsonObject);
+    JSONObject exportJson();
 }

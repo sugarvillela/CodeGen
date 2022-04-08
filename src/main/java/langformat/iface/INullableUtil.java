@@ -1,6 +1,6 @@
 package langformat.iface;
 
-import codedef.modifier.ENU_BOOLEAN;
+import codedef.enums.ENU_BOOLEAN;
 
 /** A class for accessing nullable string arrays, with nulls and empties
  *  mapped to false or null
@@ -17,6 +17,17 @@ public interface INullableUtil {
             values.length > 0 &&
             ENU_BOOLEAN.isTrue(values[0])
         );
+    }
+
+    default int extractNumber(String... values){
+        String value = this.extractString(values);
+        if(value != null){
+            try{
+                return Integer.parseInt(value);
+            }
+            catch(NumberFormatException e){}
+        }
+        return Integer.MIN_VALUE;
     }
 
     default String extractString(String... values){
