@@ -81,9 +81,9 @@ Say you have a need to generate program code from another program, as in a sourc
 #### Generating formatted code
 *  TranslationCenter go() translates from a CodeNode root to a set of files.
 *  Uses setters and strategies to control how things happen. Before calling go():
-  *  Set the root (the CodeNode tree)
-  *  Set the WriteStrategy to write to a file, list or just display output
-  *  Set the external path for where to write files (also sets a root directory for the Package info included in Java source files)
+    *  Set the root (the CodeNode tree)
+    *  Set the WriteStrategy to write to a file, list or just display output
+    *  Set the external path for where to write files (also sets a root directory for the Package info included in Java source files)
 *  This program only implements a Java-to-Java translator.
     *  To implement another language, implement the ITranslator interface.
     *  Assuming common language structures, the only difference is syntax.
