@@ -16,9 +16,6 @@ Say you have a need to generate program code from another program, as in a sourc
 *  A lot of structures are not common between languages, like classes or lambda functions. One may have it while another doesn't.
 *  The difficulty of achieving language agnosticism increases with the difference between source and target language.
     *  At some point, language translation becomes untenable (at least the way I'm doing it here).
-*  This program only implements a Java-to-Java compiler.
-    *  To implement another language, implement the ITranslator interface.
-    *  Assuming common language structures, the only difference is syntax.
 
 #### To achieve some generality, the program should identify common language structures and attributes.  
 *  Language structures like classes, methods, statements, operators etc. are defined in the program as Java enumerations. Attributes like 'name' and 'type' are defined in the same way.
@@ -87,4 +84,7 @@ Say you have a need to generate program code from another program, as in a sourc
   *  Set the root (the CodeNode tree)
   *  Set the WriteStrategy to write to a file, list or just display output
   *  Set the external path for where to write files (also sets a root directory for the Package info included in Java source files)
+*  This program only implements a Java-to-Java translator.
+    *  To implement another language, implement the ITranslator interface.
+    *  Assuming common language structures, the only difference is syntax.
 
